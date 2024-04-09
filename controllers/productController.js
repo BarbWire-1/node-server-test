@@ -15,7 +15,7 @@ async function getProducts(req, res) {
       const queryParams = req.url.split('?')[1];
       const params = new URLSearchParams(queryParams);
         const queryObj = {};
-        console.log(params,queryObj)
+
       for (const [key, value] of params.entries()) {
         queryObj[key] = value;
       }
@@ -36,7 +36,7 @@ async function getProducts(req, res) {
 async function getProduct(req, res, id) {
   try {
     const product = await Product.findById(id);
-console.log(product)
+
     if (!product) {
       resHead(res, 404);
       resEnd(res, { message: "Product Not Found" });

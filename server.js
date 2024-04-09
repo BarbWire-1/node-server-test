@@ -24,7 +24,7 @@ const id = req.url.split("/")[ 3 ];
 
         getProduct(req, res, id);
       } else if (urlQuery) {
-          console.log("query-params: ", params)// logs id=1
+          //console.log("query-params: ", params)// logs id=1
           getProducts(req, res, params);
       }
       break;
