@@ -54,11 +54,12 @@ function remove(id) {
 
 
 function findByQueryUrl(queryParams) {
-  return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+      console.log(queryParams)// logs correct for price, but doesn't resolve
     // Filter products based on query parameters
     const filteredProducts = products.filter(product => {
       for (const key in queryParams) {
-        if (product[key] !== queryParams[key]) {
+        if (product[key].toString() !== queryParams[key]) {
           return false;
         }
       }

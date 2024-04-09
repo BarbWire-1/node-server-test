@@ -9,19 +9,19 @@ const resEnd = (res, data) => res.end(JSON.stringify(data));
 
 // @desc    Gets All products
 // @route   GET /api/products
-async function getProducts(req, res, params) {
+async function getProducts(req, res) {
   try {
     if (req.url.includes('?')) {
       const queryParams = req.url.split('?')[1];
       const params = new URLSearchParams(queryParams);
         const queryObj = {};
-        console.log(queryObj)
+        console.log(params,queryObj)
       for (const [key, value] of params.entries()) {
         queryObj[key] = value;
       }
-      const products = await Product.findByQueryUrl(queryObj);
+      const filteredProducts = await Product.findByQueryUrl(queryObj);
       resHead(res, 200);
-      resEnd(res, products);
+      resEnd(res, filteredProducts);
     } else {
       const products = await Product.findAll();
       resHead(res, 200);
