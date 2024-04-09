@@ -11,6 +11,9 @@ const server = http.createServer((req, res) => {
 
     const productsUrl = req.url === "/api/products";
     const prodIDUrl = req.url.match(/\/api\/products\/([0-9]+)/);
+
+    const urlQuery = req.url.startsWith('/api/products?')
+    const params =req.url.split('?')[1]
 const id = req.url.split("/")[ 3 ];
 
     switch (req.method) {
@@ -20,6 +23,9 @@ const id = req.url.split("/")[ 3 ];
       } else if (prodIDUrl) {
 
         getProduct(req, res, id);
+      } else if (urlQuery) {
+          console.log("query-params: ", params)// logs id=1
+          getProducts(req, res, params);
       }
       break;
     case 'POST':

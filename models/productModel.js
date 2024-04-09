@@ -13,7 +13,7 @@ function findAll() {
 
 function findById(id) {
 
-   
+
   return new Promise((resolve, reject) => {
       const product = products.find((p) => p.id === id);
 
@@ -52,8 +52,8 @@ function remove(id) {
   });
 }
 
-/*
-function getByQueryUrl(queryParams) {
+
+function findByQueryUrl(queryParams) {
   return new Promise((resolve, reject) => {
     // Filter products based on query parameters
     const filteredProducts = products.filter(product => {
@@ -67,5 +67,5 @@ function getByQueryUrl(queryParams) {
     resolve(filteredProducts);
   });
 }
-*/
-module.exports = { findById, findAll, create, update, remove };
+
+module.exports = { findById, findAll, findByQueryUrl, create, update, remove };

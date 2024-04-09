@@ -9,11 +9,24 @@ const resEnd = (res, data) => res.end(JSON.stringify(data));
 
 // @desc    Gets All products
 // @route   GET /api/products
-async function getProducts(req, res) {
+async function getProducts(req, res, params) {
   try {
-    const products = await Product.findAll();
-    resHead(res, 200);
-    resEnd(res, products);
+    if (req.url.includes('?')) {
+      const queryParams = req.url.split('?')[1];
+      const params = new URLSearchParams(queryParams);
+        const queryObj = {};
+        console.log(queryObj)
+      for (const [key, value] of params.entries()) {
+        queryObj[key] = value;
+      }
+      const products = await Product.findByQueryUrl(queryObj);
+      resHead(res, 200);
+      resEnd(res, products);
+    } else {
+      const products = await Product.findAll();
+      resHead(res, 200);
+      resEnd(res, products);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -67,9 +80,9 @@ async function updateProduct(req, res, id) {
             resEnd(res, { message: "Product Not Found" });
         } else {
             let body = await getPostData(req);
-            const { title, description, price } = JSON.parse(body);
+            const { name, description, price } = JSON.parse(body);
             const productData = {
-                title: title || product.title,
+                name: name || product.name,
                 description: description || product.description,
                 price: price || product.price,
             };
