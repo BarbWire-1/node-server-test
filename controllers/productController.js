@@ -1,6 +1,7 @@
+
 // controls the dataFLOW
 const Product = require("../models/productModel");
-
+const { getPostData } = require("../utils");
 const contentType = { "Content-Type": "application/json" };
 
 const resHead = (res, status) => res.writeHead(status, contentType);
@@ -40,10 +41,12 @@ async function getProduct(req, res, id) {
 // @route   POST /api/products
 async function createProduct(req, res) {
   try {
+    let body = await getPostData(req);
+    const { title, description, price } = JSON.parse(body);
     const product = {
-      title: "Test Product",
-      description: "This is my product",
-      price: 100,
+      title,
+      description,
+      price,
     };
 
     const newProduct = await Product.create(product);
@@ -54,7 +57,33 @@ async function createProduct(req, res) {
   }
 }
 
-module.exports = { getProduct, getProducts, createProduct };
+// @desc    Update a product
+//
+async function updateProduct(req, res, id) {
+    try {
+        const product = await Product.findById(id)
+        if (!product) {
+            resHead(res, 404);
+            resEnd(res, { message: "Product Not Found" });
+        } else {
+            let body = await getPostData(req);
+            const { title, description, price } = JSON.parse(body);
+            const productData = {
+                title: title || product.title,
+                description: description || product.description,
+                price: price || product.price,
+            };
+
+            const updProduct = await Product.update(id,productData);
+            resHead(res, 200);
+            return resEnd(res, updProduct);
+        }
+    } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { getProduct, getProducts, createProduct, updateProduct };
 
 /*
 // controls the dataFLOW

@@ -22,10 +22,23 @@ function create(product) {
   return new Promise((resolve, reject) => {
     const newProduct = { id: v4(), ...product };
     products.push(newProduct);
-    writeDataToFile("./data/products.json", products); // necessary to overwrite ALL json?
+    writeDataToFile("./data/products.json", products);
 
     resolve(newProduct);
   });
 }
 
-module.exports = { findById, findAll, create };
+function update(id, productData) {
+    return new Promise((resolve, reject) => {
+        const index = products.findIndex(p => p.id === id)
+    products[index] = {id, ...productData };
+
+        console.log(products)
+    writeDataToFile("./data/products.json", products);
+
+    resolve(products[index]);
+  });
+
+}
+
+module.exports = { findById, findAll, create, update };
