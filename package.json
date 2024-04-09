@@ -7,6 +7,14 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
+  "prettier": {
+
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": true
+
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

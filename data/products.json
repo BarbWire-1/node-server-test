@@ -13,9 +13,9 @@
     },
     {
         "id": "3",
-        "title": "Updated Title",
-        "description": "This is another product",
-        "price": 50
+        "name": "Cannon EOS 80D DSLR Camera",
+        "description": "Characterized by versatile imaging specs, the Canon EOS 80D further clarifies itself using a pair of robust focusing systems and an intuitive design",
+        "price": 929.99
     },
     {
         "id": "4",
@@ -28,5 +28,11 @@
         "name": "Logitech G-Series Gaming Mouse",
         "description": "Get a better handle on your games with this Logitech LIGHTSYNC gaming mouse. The six programmable buttons allow customization for a smooth playing experience",
         "price": 49.99
+    },
+    {
+        "id": "35af2acd-416d-4ee4-bb43-3ac98555b08d",
+        "title": "added this",
+        "description": "and updated on id, checking...This is another product",
+        "price": 50
     }
 ]

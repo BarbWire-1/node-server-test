@@ -58,7 +58,7 @@ async function createProduct(req, res) {
 }
 
 // @desc    Update a product
-//
+// @route   PUT /api/products/id
 async function updateProduct(req, res, id) {
     try {
         const product = await Product.findById(id)
@@ -85,54 +85,3 @@ async function updateProduct(req, res, id) {
 
 module.exports = { getProduct, getProducts, createProduct, updateProduct };
 
-/*
-// controls the dataFLOW
-const Product = require("../models/productModel");
-
-const contentType = { "Content-Type": "application/json" };
-
-const createResponse = (res, { statusCode } , data, message ) => {
-  res.writeHead(statusCode, contentType);
-  res.end(JSON.stringify(data, message ));
-};
-
-async function getProducts(req, res) {
-  try {
-    const products = await Product.findAll();
-      createResponse(res, { statusCode: 200 }, products );
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function getProduct(req, res, id) {
-  try {
-    const product = await Product.findById(id);
-
-    if (!product) {
-      createResponse(res, { statusCode: 404, message: "Product Not Found" });
-    } else {
-        createResponse(res, { statusCode: 200 }, product );
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function createProduct(req, res) {
-  try {
-    const product = {
-      title: "Test Product",
-      description: "This is my product",
-      price: 100,
-    };
-
-    const newProduct = await Product.create(product);
-      createResponse(res, { statusCode: 201 }, newProduct );
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-module.exports = { getProduct, getProducts, createProduct };
-*/

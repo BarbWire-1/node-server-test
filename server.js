@@ -1,3 +1,7 @@
+// https://www.youtube.com/watch?v=_1xa8Bsho6A
+// https://github.com/bradtraversy/vanilla-node-rest-api
+
+
 
 const http = require("http");
 const {getProduct, getProducts, createProduct, updateProduct} = require('./controllers/productController');
@@ -5,20 +9,23 @@ const {getProduct, getProducts, createProduct, updateProduct} = require('./contr
 
 const server = http.createServer((req, res) => {
 
+    const productsUrl = req.url === "/api/products";
+    const prodIDUrl = req.url.match(/\/api\/products\/([0-9]+)/)
+
   //console.log(req.url)
-    if (req.url === "/api/products" && req.method == "GET") {
+    if (productsUrl && req.method == "GET") {
         getProducts(req, res)
 
-    } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === "GET") {
+    } else if (prodIDUrl && req.method === "GET") {
 
         const id = req.url.split("/")[ 3 ];
         //console.log(id)
         getProduct(req, res, id)
 
-    } else if (req.url === "/api/products" && req.method === "POST") {
+    } else if (productsUrl && req.method === "POST") {
 
         createProduct(req, res)
-    } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === "PUT") {
+    } else if (prodIDUrl && req.method === "PUT") {
         const id = req.url.split("/")[ 3 ];
         updateProduct(req, res, id)
 
