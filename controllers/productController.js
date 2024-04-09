@@ -23,7 +23,7 @@ async function getProducts(req, res) {
 async function getProduct(req, res, id) {
   try {
     const product = await Product.findById(id);
-
+console.log(product)
     if (!product) {
       resHead(res, 404);
       resEnd(res, { message: "Product Not Found" });
@@ -83,5 +83,24 @@ async function updateProduct(req, res, id) {
   }
 }
 
-module.exports = { getProduct, getProducts, createProduct, updateProduct };
+// @desc    Remove a product
+// @route   DELETE /api/products/id
+async function removeProduct(req, res, id) {
+  try {
+    const product = await Product.findById(id);
 
+    if (!product) {
+      resHead(res, 404);
+      resEnd(res, { message: "Product Not Found" });
+    } else {
+        await Product.remove(id)
+      resHead(res, 200);
+
+      resEnd(res, {message: `Product ${id} has been removed`});
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { getProduct, getProducts, createProduct, updateProduct, removeProduct };

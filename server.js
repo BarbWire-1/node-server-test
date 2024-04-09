@@ -4,35 +4,45 @@
 
 
 const http = require("http");
-const {getProduct, getProducts, createProduct, updateProduct} = require('./controllers/productController');
+const {getProduct, getProducts, createProduct, updateProduct, removeProduct} = require('./controllers/productController');
 
 
 const server = http.createServer((req, res) => {
 
     const productsUrl = req.url === "/api/products";
-    const prodIDUrl = req.url.match(/\/api\/products\/([0-9]+)/)
+    const prodIDUrl = req.url.match(/\/api\/products\/([0-9]+)/);
+const id = req.url.split("/")[ 3 ];
 
-  //console.log(req.url)
-    if (productsUrl && req.method == "GET") {
-        getProducts(req, res)
+    switch (req.method) {
+    case 'GET':
+      if (productsUrl) {
+        getProducts(req, res);
+      } else if (prodIDUrl) {
 
-    } else if (prodIDUrl && req.method === "GET") {
+        getProduct(req, res, id);
+      }
+      break;
+    case 'POST':
+      if (productsUrl) {
+        createProduct(req, res);
+      }
+      break;
+    case 'PUT':
+            if (prodIDUrl) {
 
-        const id = req.url.split("/")[ 3 ];
-        //console.log(id)
-        getProduct(req, res, id)
+        updateProduct(req, res, id);
+      }
+        break;
+        case 'DELETE':
 
-    } else if (productsUrl && req.method === "POST") {
+            if (prodIDUrl) {
 
-        createProduct(req, res)
-    } else if (prodIDUrl && req.method === "PUT") {
-        const id = req.url.split("/")[ 3 ];
-        updateProduct(req, res, id)
-
-    } else {
-
-    res.writeHead(404, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ message: "Route not found" }));
+        removeProduct(req, res, id);
+      }
+      break;
+    default:
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'Route not found' }));
   }
 });
 const PORT = process.env.PORT || 3000;

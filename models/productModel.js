@@ -1,5 +1,5 @@
 // handle data
-const products = require("../data/products.json");
+let products = require("../data/products.json");
 const { v4 } = require("uuid");
 const { writeDataToFile } = require("../utils.js");
 
@@ -12,8 +12,11 @@ function findAll() {
 }
 
 function findById(id) {
+
+   
   return new Promise((resolve, reject) => {
-    const product = products.find((p) => p.id === id);
+      const product = products.find((p) => p.id === id);
+
     resolve(product);
   });
 }
@@ -39,4 +42,30 @@ function update(id, productData) {
   });
 }
 
-module.exports = { findById, findAll, create, update };
+function remove(id) {
+  return new Promise((resolve, reject) => {
+    products = products.filter(p => p.id !== id)
+
+    writeDataToFile("./data/products.json", products);
+
+    resolve();
+  });
+}
+
+/*
+function getByQueryUrl(queryParams) {
+  return new Promise((resolve, reject) => {
+    // Filter products based on query parameters
+    const filteredProducts = products.filter(product => {
+      for (const key in queryParams) {
+        if (product[key] !== queryParams[key]) {
+          return false;
+        }
+      }
+      return true;
+    });
+    resolve(filteredProducts);
+  });
+}
+*/
+module.exports = { findById, findAll, create, update, remove };
