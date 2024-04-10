@@ -8,7 +8,9 @@ class JSONDataController {
 	constructor(filePath, apiUrl) {
 		this.resource = new JSONDatabase(filePath);
 		this.apiUrl = apiUrl;
-		this.itemId = null;
+        this.itemId = null;
+        this.statusCode = null;
+        this.response = null;
 		//console.log(this.resource);
 	}
 
@@ -36,29 +38,26 @@ class JSONDataController {
 					}
 				}
 
-                let statusCode = null;
-                let end = null;
+
 				const filteredItems = await this.resource.findByQuery(queryObj);
 				console.log({ filteredItems });
                 if (filteredItems.length === 0) {
-                    statusCode = 404;
-                    end = { message: 'No Match Found' };
-					res.writeHead(404, contentType);
-					res.end(JSON.stringify());
+                    this.statusCode = 404;
+                    this.response = { message: 'No Match Found' };
+					
                 } else {
-                    statusCode = 404;
+                    this.statusCode = 200;
+                    this.response = filteredItems
 
-					res.writeHead(200, contentType);
-					res.end(JSON.stringify(filteredItems));
 				}
 			} else {
                 const items = await this.resource.findAll();
-                statusCode = 200;
-                end = items
+                this.statusCode = 200;
+                this.response = items
 
             }
-            res.writeHead(statusCode, contentType);
-			res.end(JSON.stringify(end));
+            res.writeHead(this.statusCode, contentType);
+			res.end(JSON.stringify(this.response));
 		} catch (error) {
 			console.log(error);
 		}

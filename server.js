@@ -29,14 +29,15 @@ const server = http.createServer(async (req, res) => {
 
 		switch (req.method) {
 			case 'GET':
-				if (url === apiUrl) {
-					await c.getAll(req, res);
+                if (url === apiUrl) {
+                    await c.getAll(req, res);
                 } else if (route) {
                     console.log(routeParameters)
-					await c.getAll(req, res, routeParameters);
-				} else if (itemIDUrl) {
-					await c.getItem(req, res, id);
-				}
+                    await c.getAll(req, res, routeParameters);// TODO change to get routeMatch?
+                }
+				// } else if (itemIDUrl) {
+				// 	await c.getItem(req, res, id);
+				// }
 				break;
 			case 'POST':
 				if (url === apiUrl) {
