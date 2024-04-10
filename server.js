@@ -1,56 +1,65 @@
-// https://www.youtube.com/watch?v=_1xa8Bsho6A
-// https://github.com/bradtraversy/vanilla-node-rest-api
-
-
-
+// TODO - crashed itemById in get/post/delete
 const http = require("http");
-const {getProduct, getProducts, createProduct, updateProduct, removeProduct} = require('./controllers/productController');
+const ResourceController = require("./controllers/JSONDataController");
+
+// init with the path to json and the base api-url
+const Products = new ResourceController("../data/products.json", "/api/products");
+Products.initialize();
 
 
-const server = http.createServer((req, res) => {
+// array of controller instances
+const controllers = [ Products ];
 
-    const productsUrl = req.url === "/api/products";
-    const prodIDUrl = req.url.match(/\/api\/products\/([0-9]+)/);
 
-    const urlQuery = req.url.startsWith('/api/products?')
-    const params =req.url.split('?')[1]
-const id = req.url.split("/")[ 3 ];
 
-    switch (req.method) {
-    case 'GET':
-      if (productsUrl) {
-        getProducts(req, res);
-      } else if (prodIDUrl) {
+const server = http.createServer(async (req, res) => {
+    const url = req.url;
+    const method = req.method;
 
-        getProduct(req, res, id);
-      } else if (urlQuery) {
-          //console.log("query-params: ", params)// logs id=1
-          getProducts(req, res, params);
-      }
-      break;
-    case 'POST':
-      if (productsUrl) {
-        createProduct(req, res);
-      }
-      break;
-    case 'PUT':
-            if (prodIDUrl) {
+    for (const controller of controllers) {
 
-        updateProduct(req, res, id);
-      }
-        break;
-        case 'DELETE':
+        const apiUrl = controller.apiUrl;
+        const itemIDUrl = url.match(new RegExp(`${apiUrl}/([0-9]+)`));
+        const urlQuery = url.startsWith(`${apiUrl}?`);
+        const params = req.url.split('?')[1];
+        const id = itemIDUrl ;
 
-            if (prodIDUrl) {
+        switch (req.method) {
+			case 'GET':
+				if (url === apiUrl) {
+					await controller.getAll(req, res, id);
+				} else if (urlQuery) {
+					await controller.getAll(req, res, params, id);
+				} else if (itemIDUrl) {
+					await controller.getItem(req, res, id);
+				}
+				break;
+			case 'POST':
+				if (url === apiUrl) {
+					await controller.createItem(req, res);
+				}
+				break;
+			case 'PUT':
+                if (itemIDUrl) {
 
-        removeProduct(req, res, id);
-      }
-      break;
-    default:
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: 'Route not found' }));
-  }
+					await controller.updateItem(req, res, id);
+				}
+				break;
+			case 'DELETE':
+                if (itemIDUrl) {
+
+					await controller.deleteItem(req, res, id);
+				}
+				break;
+			default:
+				res.writeHead(404, { 'Content-Type': 'application/json' });
+				res.end(JSON.stringify({ message: 'Route not found' }));
+				return;
+		}
+
+    }
+
 });
-const PORT = process.env.PORT || 3000;
 
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on port... ${PORT}`));
