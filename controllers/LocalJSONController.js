@@ -7,8 +7,8 @@ const contentType = { 'Content-Type': 'application/json' };
 class JSONDataController {
 	constructor(filePath, apiUrl) {
 		this.resource = new JSONDatabase(filePath);
-        this.apiUrl = apiUrl;
-        this.itemId = null;
+		this.apiUrl = apiUrl;
+		this.itemId = null;
 		//console.log(this.resource);
 	}
 
@@ -17,39 +17,48 @@ class JSONDataController {
 	}
 
 	async getAll(req, res, params) {
-		//console.log({ params });
 		try {
 			if (params) {
 				const queryObj = {};
 
-				// Split the params string into an array of paths
+				// Split the params string into an array of paths and create key:value pairs
 				const paths = params.split('&');
-
-				// Loop through each path
 				for (const path of paths) {
-					// Split the path into key-value pairs
+
 					const keyValuePairs = path.split('/');
 
-					// Loop through each key-value pair
 					for (let i = 0; i < keyValuePairs.length; i += 2) {
 						const key = keyValuePairs[i];
 						const value = keyValuePairs[i + 1];
-                        queryObj[ key ] = value;
+						queryObj[key] = value;
 
-                        if (key === "id") this.itemId = value
-                        console.log(this.itemId)
+						if (key === 'id') this.itemId = value;
 					}
 				}
 
-				const filteredProducts =
-					await this.resource.findByQuery(queryObj);
-				res.writeHead(200, contentType);
-				res.end(JSON.stringify(filteredProducts));
+                let statusCode = null;
+                let end = null;
+				const filteredItems = await this.resource.findByQuery(queryObj);
+				console.log({ filteredItems });
+                if (filteredItems.length === 0) {
+                    statusCode = 404;
+                    end = { message: 'No Match Found' };
+					res.writeHead(404, contentType);
+					res.end(JSON.stringify());
+                } else {
+                    statusCode = 404;
+
+					res.writeHead(200, contentType);
+					res.end(JSON.stringify(filteredItems));
+				}
 			} else {
-				const products = await this.resource.findAll();
-				res.writeHead(200, contentType);
-				res.end(JSON.stringify(products));
-			}
+                const items = await this.resource.findAll();
+                statusCode = 200;
+                end = items
+
+            }
+            res.writeHead(statusCode, contentType);
+			res.end(JSON.stringify(end));
 		} catch (error) {
 			console.log(error);
 		}
@@ -116,8 +125,8 @@ class JSONDataController {
 	}
 
 	async deleteItem(req, res, id) {
-        try {
-            console.log(id)
+		try {
+			console.log(id);
 			const product = await this.resource.findById(id);
 
 			if (!product) {

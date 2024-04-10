@@ -46,7 +46,8 @@ class LocalJSONModel {
 		return this.data[index];
 	}
 
-	async remove(id) {
+    async remove(id) {
+        console.log(id)
 		this.data = this.data.filter((item) => item.id !== id);
 		await this.#saveToFile();
 	}
@@ -54,7 +55,7 @@ class LocalJSONModel {
 	async findByQuery(queryParams) {
 		return this.data.filter((item) => {
 			for (const key in queryParams) {
-				if (item[key].toString() !== queryParams[key]) {
+				if (item[key]?.toString() !== queryParams[key]) {
 					return false;
 				}
 			}
@@ -63,7 +64,10 @@ class LocalJSONModel {
 	}
 
 	async #saveToFile() {
-		await writeDataToFile(this.filePath, this.data);
+		await writeDataToFile(
+			path.resolve(__dirname, this.filePath),
+			this.data
+		);
 	}
 }
 

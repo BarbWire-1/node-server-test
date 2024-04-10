@@ -14,7 +14,7 @@ const controllers = [Products];
 
 const server = http.createServer(async (req, res) => {
 	const url = req.url;
-	
+
 
 	for (const c of controllers) {
 		const apiUrl = c.apiUrl.trim();
@@ -31,7 +31,8 @@ const server = http.createServer(async (req, res) => {
 			case 'GET':
 				if (url === apiUrl) {
 					await c.getAll(req, res);
-				} else if (route) {
+                } else if (route) {
+                    console.log(routeParameters)
 					await c.getAll(req, res, routeParameters);
 				} else if (itemIDUrl) {
 					await c.getItem(req, res, id);
