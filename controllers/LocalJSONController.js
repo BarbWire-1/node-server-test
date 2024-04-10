@@ -1,29 +1,44 @@
 //TODO- change query to apiUrl/key/value
 
-const JSONDatabase = require('../models/JSONDatabase');
+const JSONDatabase = require('../models/LocalJSONModel');
 const { getPostData } = require('../utils');
 const contentType = { 'Content-Type': 'application/json' };
 
 class JSONDataController {
 	constructor(filePath, apiUrl) {
 		this.resource = new JSONDatabase(filePath);
-		this.apiUrl = apiUrl;
-		console.log(this.resource);
+        this.apiUrl = apiUrl;
+        this.itemId = null;
+		//console.log(this.resource);
 	}
 
 	async initialize() {
 		await this.resource.initialize();
 	}
 
-	async getAll(req, res) {
+	async getAll(req, res, params) {
+		//console.log({ params });
 		try {
-			if (req.url.includes('?')) {
-				const queryParams = req.url.split('?')[1];
-				const params = new URLSearchParams(queryParams);
+			if (params) {
 				const queryObj = {};
 
-				for (const [key, value] of params.entries()) {
-					queryObj[key] = value;
+				// Split the params string into an array of paths
+				const paths = params.split('&');
+
+				// Loop through each path
+				for (const path of paths) {
+					// Split the path into key-value pairs
+					const keyValuePairs = path.split('/');
+
+					// Loop through each key-value pair
+					for (let i = 0; i < keyValuePairs.length; i += 2) {
+						const key = keyValuePairs[i];
+						const value = keyValuePairs[i + 1];
+                        queryObj[ key ] = value;
+
+                        if (key === "id") this.itemId = value
+                        console.log(this.itemId)
+					}
 				}
 
 				const filteredProducts =
@@ -42,8 +57,8 @@ class JSONDataController {
 
 	async getItem(req, res, id) {
 		try {
-			const product = await this.resource.findById(id);
-			console.log('ID: ', id);
+			const product = await this.resource.findById(this.itemId);
+			console.log('ID: ', this.itemId);
 
 			if (!product) {
 				res.writeHead(404, contentType);
@@ -67,7 +82,7 @@ class JSONDataController {
 				price,
 			};
 
-			const newProduct = await this.productsDB.create(product);
+			const newProduct = await this.resource.create(product);
 			res.writeHead(201, contentType);
 			return res.end(JSON.stringify(newProduct));
 		} catch (error) {
@@ -77,12 +92,13 @@ class JSONDataController {
 
 	async updateItem(req, res, id) {
 		try {
-			const product = await this.productsDB.findById(id);
+			const product = await this.resource.findById(id);
 			if (!product) {
 				res.writeHead(404, contentType);
 				res.end(JSON.stringify({ message: 'Product Not Found' }));
 			} else {
 				let body = await getPostData(req);
+				//TODO - add schema to resource
 				const { title, description, price } = JSON.parse(body);
 				const productData = {
 					title: title || product.title,
@@ -90,10 +106,7 @@ class JSONDataController {
 					price: price || product.price,
 				};
 
-				const updProduct = await this.productsDB.update(
-					id,
-					productData
-				);
+				const updProduct = await this.resource.update(id, productData);
 				res.writeHead(200, contentType);
 				return res.end(JSON.stringify(updProduct));
 			}
@@ -103,18 +116,19 @@ class JSONDataController {
 	}
 
 	async deleteItem(req, res, id) {
-		try {
-			const product = await this.productsDB.findById(id);
+        try {
+            console.log(id)
+			const product = await this.resource.findById(id);
 
 			if (!product) {
 				res.writeHead(404, contentType);
-				res.end(JSON.stringify({ message: 'Product Not Found' }));
+				res.end(JSON.stringify({ message: 'Item Not Found' }));
 			} else {
-				await this.productsDB.remove(id);
+				await this.resource.remove(id);
 				res.writeHead(200, contentType);
 				res.end(
 					JSON.stringify({
-						message: `Product ${id} has been removed`,
+						message: `Item ${id} has been removed`,
 					})
 				);
 			}

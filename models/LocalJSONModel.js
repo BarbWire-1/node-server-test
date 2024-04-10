@@ -3,7 +3,7 @@ const path = require('path');
 const { v4 } = require('uuid');
 const { writeDataToFile } = require('../utils.js');
 
-class JSONDatabase {
+class LocalJSONModel {
 	constructor(filePath) {
 		this.filePath = filePath;
 		this.data = [];
@@ -23,7 +23,9 @@ class JSONDatabase {
 		return this.data;
 	}
 
-	async findById(id) {
+    async findById(id) {
+        console.log("Model: ", { id })
+        console.log(this.data.find((item) => item.id === id));
 		return this.data.find((item) => item.id === id);
 	}
 
@@ -65,4 +67,4 @@ class JSONDatabase {
 	}
 }
 
-module.exports = JSONDatabase;
+module.exports = LocalJSONModel;

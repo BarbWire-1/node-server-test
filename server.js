@@ -1,6 +1,6 @@
 // TODO - crashed itemById in get/post/delete
 const http = require('http');
-const ResourceController = require('./controllers/JSONDataController');
+const ResourceController = require('./controllers/LocalJSONController');
 
 // init with the path to json and the base api-url
 const Products = new ResourceController(
@@ -14,21 +14,25 @@ const controllers = [Products];
 
 const server = http.createServer(async (req, res) => {
 	const url = req.url;
-	const method = req.method;
+	
 
 	for (const c of controllers) {
-		const apiUrl = c.apiUrl;
-		const itemIDUrl = url.match(new RegExp(`${apiUrl}/([0-9]+)`));
-		const urlQuery = url.startsWith(`${apiUrl}?`);
-		const params = req.url.split('?')[1];
-		const id = itemIDUrl ? itemIDUrl[1] : null;
+		const apiUrl = c.apiUrl.trim();
+		//const itemIDUrl = url.match(new RegExp(`${apiUrl}/([0-9]+)`));
+		const route = url.startsWith(`${apiUrl}/`);
+		const routeParameters = url.slice(apiUrl.length + 1); // Extract params after apiUrl
+        const id =
+			routeParameters.split('/')[0] === 'id'
+				? routeParameters.split('/')[1]
+				: null;
+        console.log("Server: ",{id})
 
 		switch (req.method) {
 			case 'GET':
 				if (url === apiUrl) {
-					await c.getAll(req, res, id);
-				} else if (urlQuery) {
-					await c.getAll(req, res, params, id);
+					await c.getAll(req, res);
+				} else if (route) {
+					await c.getAll(req, res, routeParameters);
 				} else if (itemIDUrl) {
 					await c.getItem(req, res, id);
 				}
@@ -39,12 +43,12 @@ const server = http.createServer(async (req, res) => {
 				}
 				break;
 			case 'PUT':
-				if (itemIDUrl) {
+				if (route) {
 					await c.updateItem(req, res, id);
 				}
 				break;
 			case 'DELETE':
-				if (itemIDUrl) {
+				if (route) {
 					await c.deleteItem(req, res, id);
 				}
 				break;
