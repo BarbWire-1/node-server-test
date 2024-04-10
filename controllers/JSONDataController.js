@@ -1,3 +1,5 @@
+//TODO- change query to apiUrl/key/value
+
 const JSONDatabase = require('../models/JSONDatabase');
 const { getPostData } = require('../utils');
 const contentType = { 'Content-Type': 'application/json' };
@@ -40,8 +42,8 @@ class JSONDataController {
 
 	async getItem(req, res, id) {
 		try {
-            const product = await this.resource.findById(id);
-            console.log("ID: ",id)
+			const product = await this.resource.findById(id);
+			console.log('ID: ', id);
 
 			if (!product) {
 				res.writeHead(404, contentType);
