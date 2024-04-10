@@ -40,7 +40,8 @@ class JSONDataController {
 
 	async getItem(req, res, id) {
 		try {
-			const product = await this.productsDB.findById(id);
+            const product = await this.resource.findById(id);
+            console.log("ID: ",id)
 
 			if (!product) {
 				res.writeHead(404, contentType);

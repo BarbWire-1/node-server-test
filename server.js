@@ -22,7 +22,7 @@ const server = http.createServer(async (req, res) => {
         const itemIDUrl = url.match(new RegExp(`${apiUrl}/([0-9]+)`));
         const urlQuery = url.startsWith(`${apiUrl}?`);
         const params = req.url.split('?')[1];
-        const id = itemIDUrl ;
+        const id = itemIDUrl[1];
 
         switch (req.method) {
 			case 'GET':
