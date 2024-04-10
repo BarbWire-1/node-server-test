@@ -44,7 +44,7 @@ class JSONDataController {
                 if (filteredItems.length === 0) {
                     this.statusCode = 404;
                     this.response = { message: 'No Match Found' };
-					
+
                 } else {
                     this.statusCode = 200;
                     this.response = filteredItems
@@ -82,7 +82,8 @@ class JSONDataController {
 
 	async createItem(req, res) {
 		try {
-			let body = await getPostData(req);
+            let body = await getPostData(req);
+            console.log({body})
 			const { title, description, price } = JSON.parse(body);
 			const product = {
 				title,
