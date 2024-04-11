@@ -6,15 +6,14 @@ const { getPostData } = require('../../utils');
 const contentType = { 'Content-Type': 'application/json' };
 
 class JSONDataController {
-    #statusCode
-    #response
+
     constructor (filePath, apiUrl) {
 
 		this.resource = new JSONDatabase(filePath);
 		this.apiUrl = apiUrl;
 		this.recordId = null;
-		this.#statusCode = null;
-		this.#response = null;
+		this.statusCode = null;
+		this.response = null;
 		this.createSchema = {};
 		this.updateSchema = {};
 
@@ -28,14 +27,14 @@ const absoluteFilePath = path.resolve(__dirname, file);
         const absoluteApiUrl = baseRoute;
         return {absoluteFilePath, absoluteApiUrl}
 }
-	async getAll(req, res, route) {
+	async getAll(req, res, paramRoute) {
 		// working
 		try {
-			if (route) {
+			if (paramRoute) {
 				const queryObj = {};
 
 				// Split the params string into an array of paths and create key:value pairs
-				const paths = route.split('&');
+				const paths = paramRoute.split('&');
 				for (const path of paths) {
 					const keyValuePairs = path.split('/');
 
@@ -48,19 +47,19 @@ const absoluteFilePath = path.resolve(__dirname, file);
 					}
 				}
 
-				const filteredItems = await this.resource.findByQuery(queryObj);
-				console.log({ filteredItems });
-				if (filteredItems.length === 0) {
-					this.#statusCode = 404;
-					this.#response = { message: 'No Match Found' };
+				const filteredRecords = await this.resource.findByQuery(queryObj);
+				//console.log({filteredRecords });
+				if (filteredRecords.length === 0) {
+					this.statusCode = 404;
+					this.response = { message: 'No Match Found' };
 				} else {
-					this.#statusCode = 200;
-					this.#response = filteredItems;
+					this.statusCode = 200;
+					this.response = filteredRecords;
 				}
 			} else {
 				const records = await this.resource.findAll();
-				this.#statusCode = 200;
-				this.#response = records;
+				this.statusCode = 200;
+				this.response = records;
 			}
 			this.respond(res);
 		} catch (error) {
@@ -68,43 +67,43 @@ const absoluteFilePath = path.resolve(__dirname, file);
 		}
 	}
 
-	async getItem(req, res, id) {
+	async getRecord(req, res) {
 		try {
-			const product = await this.resource.findById(this.recordId);
+			const record = await this.resource.findById(this.recordId);
 			console.log('ID: ', this.recordId);
 
-			if (!product) {
+			if (!record) {
 				res.writeHead(404, contentType);
-				res.end(JSON.stringify({ message: 'Product Not Found' }));
+				res.end(JSON.stringify({ message: 'Record Not Found' }));
 			} else {
 				res.writeHead(200, contentType);
-				res.end(JSON.stringify(product));
+				res.end(JSON.stringify(record));
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
-	async createItem(req, res) {
+	async createRecord(req, res) {
 		// working
 		console.log('url', req.url);
 		if (req.url !== this.apiUrl) {
-			this.#statusCode = 404;
-			this.#response = { message: `POST only on ${this.apiUrl} ` };
+			this.statusCode = 404;
+			this.response = { message: `POST only on ${this.apiUrl} ` };
 		} else {
 			try {
 				let body = await getPostData(req);
 
 				const { title, description, price } = JSON.parse(body);
-				const product = {
+				const record = {
 					title,
 					description,
 					price,
 				};
 
-				const newProduct = await this.resource.create(product);
-				this.#statusCode = 201;
-				this.#response = newProduct;
+				const newRecord = await this.resource.create(record);
+				this.statusCode = 201;
+				this.response = newRecord;
 			} catch (error) {
 				console.log(error);
 			}
@@ -113,12 +112,12 @@ const absoluteFilePath = path.resolve(__dirname, file);
 		this.respond(res);
 	}
 
-	async updateItem(req, res, id) {
+	async updateRecord(req, res, id) {
 		try {
 			const record = await this.resource.findById(id);
 			if (!record) {
 				res.writeHead(404, contentType);
-				res.end(JSON.stringify({ message: 'Product Not Found' }));
+				res.end(JSON.stringify({ message: 'record Not Found' }));
 				return;
 			}
 
@@ -132,16 +131,16 @@ const absoluteFilePath = path.resolve(__dirname, file);
 					this.updateSchema
 				);
 				// filteredData now contains only the valid fields according to the update schema
-				const updItem = await this.resource.update(id, {
+				const updRecord = await this.resource.update(id, {
 					...record,
 					...filteredData,
 				});
-				this.#statusCode = 200;
-				this.#response = updItem;
+				this.statusCode = 200;
+				this.response = updRecord;
 				// Now you can use filteredData to update the record
 			} catch (error) {
-				this.#statusCode = 400;
-				this.#response = { message: 'Invalid request' };
+				this.statusCode = 400;
+				this.response = { message: 'Invalid request' };
 				// Handle invalid keys
 				console.error(error.message);
 			}
@@ -168,18 +167,18 @@ const absoluteFilePath = path.resolve(__dirname, file);
 		return filteredData;
 	}
 
-	async deleteItem(req, res, id) {
+	async deleteRecord(req, res, id) {
 		try {
 			console.log(id);
-			const product = await this.resource.findById(id);
+			const record = await this.resource.findById(id);
 
-			if (!product) {
-				this.#statusCode = 404;
-				this.#response = { message: 'Item Not Found' };
+			if (!record) {
+				this.statusCode = 404;
+				this.response = { message: 'record Not Found' };
 			} else {
 				await this.resource.remove(id);
-				this.#statusCode = 200;
-				this.#response = { message: `Item ${id} has been removed` };
+				this.statusCode = 200;
+				this.response = { message: `record ${id} has been removed` };
 				this.respond(res);
 			}
 		} catch (error) {
@@ -188,8 +187,8 @@ const absoluteFilePath = path.resolve(__dirname, file);
 	}
 
 	respond(res) {
-		res.writeHead(this.#statusCode, contentType);
-		return res.end(JSON.stringify(this.#response));
+		res.writeHead(this.statusCode, contentType);
+		return res.end(JSON.stringify(this.response));
 	}
 }
 

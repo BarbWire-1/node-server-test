@@ -24,8 +24,8 @@ class LocalJSONModel {
 	}
 
 	async findById(id) {
-		console.log('Model: ', { id });
-		console.log(this.data.find((item) => item.id === id));
+		// console.log('Model: ', { id });
+		// console.log(this.data.find((item) => item.id === id));
 		return this.data.find((item) => item.id === id);
 	}
 
@@ -47,7 +47,7 @@ class LocalJSONModel {
 	}
 
 	async remove(id) {
-		console.log(id);
+		//console.log(id);
 		this.data = this.data.filter((item) => item.id !== id);
 		await this.#saveToFile();
 	}
