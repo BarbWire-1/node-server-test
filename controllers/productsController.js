@@ -1,6 +1,6 @@
 const ResourceController = require('../serverClasses/jsonClasses/LocalJSONController');
- const path = require('path');
- const absoluteFilePath = path.resolve(__dirname, '../data/products.json');
+const path = require('path');
+const absoluteFilePath = path.resolve(__dirname, '../data/products.json');
 const absoluteApiUrl = '/api/products/';
 
 // Initialize the ResourceController with the absolute file path and API URL

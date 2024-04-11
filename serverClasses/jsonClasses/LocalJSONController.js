@@ -1,4 +1,5 @@
 //TODO- add querySearch
+const path = require('path');
 
 const JSONDatabase = require('./LocalJSONModel');
 const { getPostData } = require('../../utils');
@@ -14,13 +15,17 @@ class JSONDataController {
 		this.response = null;
 		this.createSchema = {};
 		this.updateSchema = {};
-		//console.log(this.resource);
+		
 	}
 
 	async initialize() {
 		await this.resource.initialize();
 	}
-
+    createAbsolutePaths(file, baseRoute) {
+const absoluteFilePath = path.resolve(__dirname, file);
+        const absoluteApiUrl = baseRoute;
+        return {absoluteFilePath, absoluteApiUrl}
+}
 	async getAll(req, res, route) {
 		// working
 		try {
