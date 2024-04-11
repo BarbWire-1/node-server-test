@@ -29,22 +29,19 @@ class Server {
 					}
 					break;
 				case 'POST':
-					await c.createItem(req, res);
+					await c.createRecord(req, res);
 					break;
 				case 'PUT':
 					if (route) {
-						await c.updateItem(req, res, id);
+						await c.updateRecord(req, res, id);
 					}
 					break;
 				case 'DELETE':
 					if (route) {
-						await c.deleteItem(req, res, id);
+						await c.deleteRecord(req, res, id);
 					}
 					break;
-				default:
-					res.writeHead(404, { 'Content-Type': 'application/json' });
-					res.end(JSON.stringify({ message: 'Route not found' }));
-					return;
+				
 			}
 			// does this make any sense in real world application???
 			this._response = c.response;

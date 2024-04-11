@@ -6,27 +6,25 @@ const { getPostData } = require('../../utils');
 const contentType = { 'Content-Type': 'application/json' };
 
 class JSONDataController {
-
-    constructor (filePath, apiUrl) {
-
+	constructor(filePath, apiUrl) {
 		this.resource = new JSONDatabase(filePath);
 		this.apiUrl = apiUrl;
 		this.recordId = null;
 		this.statusCode = null;
-		this.response = null;
+        this.response = null;
+        this.message = null;
 		this.createSchema = {};
 		this.updateSchema = {};
-
 	}
 
 	async initialize() {
 		await this.resource.initialize();
 	}
-    createAbsolutePaths(file, baseRoute) {
-const absoluteFilePath = path.resolve(__dirname, file);
-        const absoluteApiUrl = baseRoute;
-        return {absoluteFilePath, absoluteApiUrl}
-}
+	createAbsolutePaths(file, baseRoute) {
+		const absoluteFilePath = path.resolve(__dirname, file);
+		const absoluteApiUrl = baseRoute;
+		return { absoluteFilePath, absoluteApiUrl };
+	}
 	async getAll(req, res, paramRoute) {
 		// working
 		try {
@@ -47,7 +45,8 @@ const absoluteFilePath = path.resolve(__dirname, file);
 					}
 				}
 
-				const filteredRecords = await this.resource.findByQuery(queryObj);
+				const filteredRecords =
+					await this.resource.findByQuery(queryObj);
 				//console.log({filteredRecords });
 				if (filteredRecords.length === 0) {
 					this.statusCode = 404;
@@ -84,31 +83,40 @@ const absoluteFilePath = path.resolve(__dirname, file);
 		}
 	}
 
-	async createRecord(req, res) {
-		// working
-		console.log('url', req.url);
-		if (req.url !== this.apiUrl) {
-			this.statusCode = 404;
-			this.response = { message: `POST only on ${this.apiUrl} ` };
-		} else {
-			try {
-				let body = await getPostData(req);
+    async createRecord(req, res) {
+        this.message = null;
+		try {
+			// Ensure the request URL matches the expected API URL
+			if (req.url !== this.apiUrl) {
+				this.statusCode = 404;
+				this.response = { message: `POST only on ${this.apiUrl} ` };
+			} else {
+				// Parse request body
+				const body = await getPostData(req);
+				const requestData = JSON.parse(body);
 
-				const { title, description, price } = JSON.parse(body);
-				const record = {
-					title,
-					description,
-					price,
-				};
+				// Validate request data against create schema
+				const newRecord = this.filterDataAgainstSchema(
+					requestData,
+					this.createSchema
+				);
 
-				const newRecord = await this.resource.create(record);
+				// Create new record using validated data
+				const createdRecord = await this.resource.create(newRecord);
+
+				// Set response status code and data
 				this.statusCode = 201;
-				this.response = newRecord;
-			} catch (error) {
-				console.log(error);
+				this.response = createdRecord;
 			}
+		} catch (error) {
+			// Handle any errors that occur during validation or record creation
+			console.log(error);
+            this.statusCode = 500;
+
+			this.response = { message: `Internal server error. ${this.message}`};
 		}
 
+		// Send response
 		this.respond(res);
 	}
 
@@ -154,13 +162,33 @@ const absoluteFilePath = path.resolve(__dirname, file);
 	//TEST
 	filterDataAgainstSchema(requestData, schema) {
 		const filteredData = {};
-//console.log(schema)// TODO check against schema for all settings of value
-		for (const key in requestData) {
-            if (schema[ key ]) {
-				console.log(schema[key]); // updating price: { type: 'number', errorMessage: 'Price must be a number' }
-				filteredData[key] = requestData[key];
-			} else {
-				throw new Error(`Invalid key: ${key}`);
+
+		for (const key in schema) {
+			if (schema.hasOwnProperty(key)) {
+				const fieldSchema = schema[key];
+
+				// Check if the field is required but missing in the request data
+                if (fieldSchema.required && !requestData.hasOwnProperty(key)) {
+                    this.message += `'${key}' is required`;
+					throw new Error(this.message);
+				}
+
+				// Check if the field exists in the request data
+				if (requestData.hasOwnProperty(key)) {
+					const value = requestData[key];
+
+					// Check if the field value matches the specified type
+                    if (typeof value !== fieldSchema.type) {
+                        this.message += `'${key}' must be of type ${fieldSchema.type}`;
+						throw new Error( this.message
+
+                        );
+
+					}
+
+					// Add the validated field to the filtered data
+					filteredData[key] = value;
+				}
 			}
 		}
 
