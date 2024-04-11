@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const { v4 } = require('uuid');
-const { writeDataToFile } = require('../utils.js');
+const { writeDataToFile } = require('../../utils.js');
 
 class LocalJSONModel {
 	constructor(filePath) {
@@ -23,9 +23,9 @@ class LocalJSONModel {
 		return this.data;
 	}
 
-    async findById(id) {
-        console.log("Model: ", { id })
-        console.log(this.data.find((item) => item.id === id));
+	async findById(id) {
+		console.log('Model: ', { id });
+		console.log(this.data.find((item) => item.id === id));
 		return this.data.find((item) => item.id === id);
 	}
 
@@ -46,8 +46,8 @@ class LocalJSONModel {
 		return this.data[index];
 	}
 
-    async remove(id) {
-        console.log(id)
+	async remove(id) {
+		console.log(id);
 		this.data = this.data.filter((item) => item.id !== id);
 		await this.#saveToFile();
 	}

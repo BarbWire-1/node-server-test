@@ -1,13 +1,7 @@
 // TODO - crashed itemById in get/post/delete
 const http = require('http');
-const ResourceController = require('./controllers/LocalJSONController');
-
-// init with the path to json and the base api-url
-const Products = new ResourceController(
-	'../data/products.json',
-	'/api/products'
-);
-Products.initialize();
+const Products = require('./controllers/productsController');
+//console.log(Products)
 
 // array of controller instances
 const controllers = [Products];
@@ -15,34 +9,34 @@ const controllers = [Products];
 const server = http.createServer(async (req, res) => {
 	const url = req.url;
 
-
 	for (const c of controllers) {
-		const apiUrl = c.apiUrl.trim();
+		//console.log(c);
+		//const apiUrl = c.apiUrl.trim();
 		//const itemIDUrl = url.match(new RegExp(`${apiUrl}/([0-9]+)`));
-		const route = url.startsWith(`${apiUrl}/`);
-		const routeParameters = url.slice(apiUrl.length + 1); // Extract params after apiUrl
-        const id =
+		const route = url.startsWith(`${c.apiUrl}`) && url !== c.apiUrl;
+		const routeParameters = url.slice(c.apiUrl.length); // Extract params after apiUrl
+		const id =
 			routeParameters.split('/')[0] === 'id'
 				? routeParameters.split('/')[1]
 				: null;
-        console.log("Server: ",{id})
+		//console.log("Server: ", { id })
+		//console.log({ route }, routeParameters);
 
 		switch (req.method) {
 			case 'GET':
-                if (url === apiUrl) {
-                    await c.getAll(req, res);
-                } else if (route) {
-                    console.log(routeParameters)
-                    await c.getAll(req, res, routeParameters);// TODO change to get routeMatch?
-                }
+				if (url === c.apiUrl) {
+					await c.getAll(req, res);
+				} else if (route) {
+					await c.getAll(req, res, routeParameters); // TODO change to get routeMatch?
+				}
 				// } else if (itemIDUrl) {
 				// 	await c.getItem(req, res, id);
 				// }
 				break;
 			case 'POST':
-				if (url === apiUrl) {
-					await c.createItem(req, res);
-				}
+				//if (url === apiUrl) {
+				await c.createItem(req, res);
+				//}
 				break;
 			case 'PUT':
 				if (route) {
