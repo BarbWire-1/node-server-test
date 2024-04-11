@@ -15,7 +15,7 @@ class JSONDataController {
 		this.response = null;
 		this.createSchema = {};
 		this.updateSchema = {};
-		
+
 	}
 
 	async initialize() {
@@ -151,11 +151,12 @@ const absoluteFilePath = path.resolve(__dirname, file);
 		}
 	}
 	//TEST
-	filterDataAgainstSchema(requestData, updateSchema) {
+	filterDataAgainstSchema(requestData, schema) {
 		const filteredData = {};
-
+//console.log(schema)// TODO check against schema for all settings of value
 		for (const key in requestData) {
-			if (updateSchema[key]) {
+            if (schema[ key ]) {
+				console.log(schema[key]); // updating price: { type: 'number', errorMessage: 'Price must be a number' }
 				filteredData[key] = requestData[key];
 			} else {
 				throw new Error(`Invalid key: ${key}`);
