@@ -6,13 +6,15 @@ const { getPostData } = require('../../utils');
 const contentType = { 'Content-Type': 'application/json' };
 
 class JSONDataController {
+    #statusCode
+    #response
     constructor (filePath, apiUrl) {
 
 		this.resource = new JSONDatabase(filePath);
 		this.apiUrl = apiUrl;
-		this.itemId = null;
-		this.statusCode = null;
-		this.response = null;
+		this.recordId = null;
+		this.#statusCode = null;
+		this.#response = null;
 		this.createSchema = {};
 		this.updateSchema = {};
 
@@ -42,23 +44,23 @@ const absoluteFilePath = path.resolve(__dirname, file);
 						const value = keyValuePairs[i + 1];
 						queryObj[key] = value;
 
-						if (key === 'id') this.itemId = value;
+						if (key === 'id') this.recordId = value;
 					}
 				}
 
 				const filteredItems = await this.resource.findByQuery(queryObj);
 				console.log({ filteredItems });
 				if (filteredItems.length === 0) {
-					this.statusCode = 404;
-					this.response = { message: 'No Match Found' };
+					this.#statusCode = 404;
+					this.#response = { message: 'No Match Found' };
 				} else {
-					this.statusCode = 200;
-					this.response = filteredItems;
+					this.#statusCode = 200;
+					this.#response = filteredItems;
 				}
 			} else {
-				const items = await this.resource.findAll();
-				this.statusCode = 200;
-				this.response = items;
+				const records = await this.resource.findAll();
+				this.#statusCode = 200;
+				this.#response = records;
 			}
 			this.respond(res);
 		} catch (error) {
@@ -68,8 +70,8 @@ const absoluteFilePath = path.resolve(__dirname, file);
 
 	async getItem(req, res, id) {
 		try {
-			const product = await this.resource.findById(this.itemId);
-			console.log('ID: ', this.itemId);
+			const product = await this.resource.findById(this.recordId);
+			console.log('ID: ', this.recordId);
 
 			if (!product) {
 				res.writeHead(404, contentType);
@@ -87,8 +89,8 @@ const absoluteFilePath = path.resolve(__dirname, file);
 		// working
 		console.log('url', req.url);
 		if (req.url !== this.apiUrl) {
-			this.statusCode = 404;
-			this.response = { message: `POST only on ${this.apiUrl} ` };
+			this.#statusCode = 404;
+			this.#response = { message: `POST only on ${this.apiUrl} ` };
 		} else {
 			try {
 				let body = await getPostData(req);
@@ -101,8 +103,8 @@ const absoluteFilePath = path.resolve(__dirname, file);
 				};
 
 				const newProduct = await this.resource.create(product);
-				this.statusCode = 201;
-				this.response = newProduct;
+				this.#statusCode = 201;
+				this.#response = newProduct;
 			} catch (error) {
 				console.log(error);
 			}
@@ -113,8 +115,8 @@ const absoluteFilePath = path.resolve(__dirname, file);
 
 	async updateItem(req, res, id) {
 		try {
-			const item = await this.resource.findById(id);
-			if (!item) {
+			const record = await this.resource.findById(id);
+			if (!record) {
 				res.writeHead(404, contentType);
 				res.end(JSON.stringify({ message: 'Product Not Found' }));
 				return;
@@ -131,15 +133,15 @@ const absoluteFilePath = path.resolve(__dirname, file);
 				);
 				// filteredData now contains only the valid fields according to the update schema
 				const updItem = await this.resource.update(id, {
-					...item,
+					...record,
 					...filteredData,
 				});
-				this.statusCode = 200;
-				this.response = updItem;
-				// Now you can use filteredData to update the item
+				this.#statusCode = 200;
+				this.#response = updItem;
+				// Now you can use filteredData to update the record
 			} catch (error) {
-				this.statusCode = 400;
-				this.response = { message: 'Invalid request' };
+				this.#statusCode = 400;
+				this.#response = { message: 'Invalid request' };
 				// Handle invalid keys
 				console.error(error.message);
 			}
@@ -172,12 +174,12 @@ const absoluteFilePath = path.resolve(__dirname, file);
 			const product = await this.resource.findById(id);
 
 			if (!product) {
-				this.statusCode = 404;
-				this.response = { message: 'Item Not Found' };
+				this.#statusCode = 404;
+				this.#response = { message: 'Item Not Found' };
 			} else {
 				await this.resource.remove(id);
-				this.statusCode = 200;
-				this.response = { message: `Item ${id} has been removed` };
+				this.#statusCode = 200;
+				this.#response = { message: `Item ${id} has been removed` };
 				this.respond(res);
 			}
 		} catch (error) {
@@ -186,8 +188,8 @@ const absoluteFilePath = path.resolve(__dirname, file);
 	}
 
 	respond(res) {
-		res.writeHead(this.statusCode, contentType);
-		return res.end(JSON.stringify(this.response));
+		res.writeHead(this.#statusCode, contentType);
+		return res.end(JSON.stringify(this.#response));
 	}
 }
 
