@@ -43,7 +43,7 @@ server.internal.makeRequest(method, path, data, hostname, port)
 
 const requestParams = {
 	method: 'GET',
-	path: '/api/products/id/1',
+	path: '/api/products/',
 	data: null, // default to null in class
 	// pass these two from the consuming server-instance??
 	hostname: 'localhost',
@@ -54,7 +54,7 @@ const requestParams = {
 server.internal.makeRequest(requestParams)
   .then((responseData) => {
       let data = JSON.parse(responseData);
-      console.log("Got Data! 🎁", data);
+      console.log("Got Data!", data);
       data.forEach(r => console.log(r.id));
   })
   .catch((error) => {
