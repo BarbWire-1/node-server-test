@@ -38,3 +38,26 @@ server.internal.makeRequest(method, path, data, hostname, port)
     // Handle any errors that occur during the request
     console.error(error);
   });
+
+
+
+const requestParams = {
+	method: 'GET',
+	path: '/api/products/id/1',
+	data: null, // default to null in class
+	// pass these two from the consuming server-instance??
+	hostname: 'localhost',
+	port: 3000,
+};
+
+
+server.internal.makeRequest(requestParams)
+  .then((responseData) => {
+      let data = JSON.parse(responseData);
+      console.log("Got Data! 🎁", data);
+      data.forEach(r => console.log(r.id));
+  })
+  .catch((error) => {
+
+    console.error(error);
+  });

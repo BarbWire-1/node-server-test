@@ -1,16 +1,15 @@
-const http = require('http')
+const http = require('http');
 // InternalRequestHandler.js
 class InternalRequestHandler {
 	constructor() {}
 
-	async makeRequest(method, path, data, hostname, port) {
+	async makeRequest(requestOptions) {
 		return new Promise((resolve, reject) => {
-			// Define options for the request
+			const { hostname, port, path, method, data } = requestOptions;
+
+			// Define request details
 			const options = {
-				hostname,
-				port,
-				path,
-				method,
+				...requestOptions,
 				headers: {
 					'Content-Type': 'application/json', // Assuming JSON data
 				},
@@ -27,8 +26,7 @@ class InternalRequestHandler {
 
 				// When response is complete, resolve with the data
 				res.on('end', () => {
-                    resolve(responseData);
-
+					resolve(responseData);
 				});
 			});
 
@@ -39,7 +37,7 @@ class InternalRequestHandler {
 
 			// Write data to the request body if present
 			if (data) {
-                req.write(JSON.stringify(data));
+				req.write(JSON.stringify(data));
 			}
 
 			// End the request
