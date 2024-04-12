@@ -23,24 +23,22 @@ class InternalRequestHandler {
 				res.on('data', (chunk) => {
 					responseData += chunk;
 				});
-
-				// When response is complete, resolve with the data
 				res.on('end', () => {
-					resolve(responseData);
+                    resolve(responseData);
+
 				});
 			});
 
-			// Handle errors
+
 			req.on('error', (error) => {
 				reject(error);
 			});
 
-			// Write data to the request body if present
-			if (data) {
-				req.write(JSON.stringify(data));
-			}
 
-			// End the request
+			if (data) req.write(JSON.stringify(data));
+
+
+
 			req.end();
 		});
 	}

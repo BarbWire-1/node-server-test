@@ -1,4 +1,4 @@
-const http = require('http');
+
 const Products = require('./controllers/productsController');
 const Server = require('./serverClasses/jsonClasses/Server');
 
@@ -18,46 +18,23 @@ server.start(PORT);
 
 // // Define the request type and URL you want to test
 
-
-// Define the request parameters
-const method = 'GET';
-const path = '/api/products/';
-const data = null; // No data for a GET request
-const hostname = 'localhost'; // Assuming your server is running locally
-const port = 3000; // Assuming your server is running on port 3000
-
-// Call the makeRequest method
-server.internal.makeRequest(method, path, data, hostname, port)
-  .then((responseData) => {
-      let data = JSON.parse(responseData);
-      console.log("Got Data", data);
-      data.forEach(r => console.log(r.id))
-
-  })
-  .catch((error) => {
-    // Handle any errors that occur during the request
-    console.error(error);
-  });
-
-
-
 const requestParams = {
 	method: 'GET',
-	path: '/api/products/',
-	data: null, // default to null in class
+    path: '/api/products/id/2',
+	//data: null, // default to null in class
 	// pass these two from the consuming server-instance??
 	hostname: 'localhost',
 	port: 3000,
 };
 
+server.internal
+	.makeRequest(requestParams)
+	.then((responseData) => {
+		let result = JSON.parse(responseData);
+		console.log('Got Data from internal request!', result);
+        if (Array.isArray(result)) result.forEach((r) => console.log("id: ", r.id));
 
-server.internal.makeRequest(requestParams)
-  .then((responseData) => {
-      let data = JSON.parse(responseData);
-      console.log("Got Data!", data);
-      data.forEach(r => console.log(r.id));
-  })
-  .catch((error) => {
-
-    console.error(error);
-  });
+	})
+	.catch((error) => {
+		console.error(error);
+    });
