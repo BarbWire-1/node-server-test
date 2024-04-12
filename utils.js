@@ -24,4 +24,16 @@ reject(error)
     })
 }
 
-module.exports = { writeDataToFile, getPostData };
+let DEBUG = true; // or false
+
+function customLog(message) {
+	if (DEBUG) {
+		console.log(message);
+	}
+}
+function setDebugMode(value) {
+	DEBUG = value;
+}
+
+
+module.exports = { writeDataToFile, getPostData, customLog, setDebugMode };

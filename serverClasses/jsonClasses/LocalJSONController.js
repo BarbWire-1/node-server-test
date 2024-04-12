@@ -1,5 +1,6 @@
 //TODO- add querySearch
 const path = require('path');
+const Validator = require('./Validator')
 
 const JSONDatabase = require('./LocalJSONModel');
 const { getPostData } = require('../../utils');
@@ -11,10 +12,13 @@ class JSONDataController {
 		this.apiUrl = apiUrl;
 		this.recordId = null;
 		this.statusCode = null;
-        this.response = null;
-        this.message = null;
+		this.response = null;
+		this.message = null;
 		this.createSchema = {};
 		this.updateSchema = {};
+
+		// Instantiate a Validator object
+		this.validator = new Validator();
 	}
 
 	async initialize() {
@@ -84,7 +88,7 @@ class JSONDataController {
 	}
 
     async createRecord(req, res) {
-        this.message = null;
+        this.message = '';
 		try {
 			// Ensure the request URL matches the expected API URL
 			if (req.url !== this.apiUrl) {
@@ -180,9 +184,7 @@ class JSONDataController {
 					// Check if the field value matches the specified type
                     if (typeof value !== fieldSchema.type) {
                         this.message += `'${key}' must be of type ${fieldSchema.type}`;
-						throw new Error( this.message
-
-                        );
+						throw new Error(this.message);
 
 					}
 
@@ -197,16 +199,16 @@ class JSONDataController {
 
 	async deleteRecord(req, res, id) {
 		try {
-			console.log(id);
+			//console.log(id);
 			const record = await this.resource.findById(id);
 
 			if (!record) {
 				this.statusCode = 404;
-				this.response = { message: 'record Not Found' };
+				this.response = { message: 'Record Not Found' };
 			} else {
 				await this.resource.remove(id);
 				this.statusCode = 200;
-				this.response = { message: `record ${id} has been removed` };
+				this.response = { message: `Record with id ${id} has been removed` };
 				this.respond(res);
 			}
 		} catch (error) {
