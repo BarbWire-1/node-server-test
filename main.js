@@ -13,18 +13,18 @@ server.use(async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.start(PORT);
+server.start();
 //console.log(server.response)
 
 // // Define the request type and URL you want to test
 
 const requestParams = {
 	method: 'GET',
-    path: '/api/products/id/2',
+    path: '/api/products/price/49.99', 
 	//data: null, // default to null in class
 	// pass these two from the consuming server-instance??
-	hostname: 'localhost',
-	port: 3000,
+	 hostname: 'localhost',
+	 port: 3000,
 };
 
 server.internal

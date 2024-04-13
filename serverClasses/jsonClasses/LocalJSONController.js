@@ -43,7 +43,8 @@ class JSONDataController {
 					for (let i = 0; i < keyValuePairs.length; i += 2) {
 						const key = keyValuePairs[i];
 						const value = keyValuePairs[i + 1];
-						queryObj[key] = value;
+                        queryObj[ key ] = value;
+                        console.log(typeof key, typeof value)
 
 						if (key === 'id') this.recordId = value;
 					}

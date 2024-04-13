@@ -6,12 +6,13 @@ setDebugMode(false);
 
 
 class Server {
-    constructor (controllers, internal = true) {
-        this.port = null;
+    constructor (controllers, internal = true, port = 3000, host = 'localhost') {
+        this.port = port;
+        this.host = host;
 		this.controllers = controllers;
 		this.middlewares = [];
         this._response = null;
-        this.internal = internal ? new InternalRequestHandler() : null;
+        this.internal = internal ? new InternalRequestHandler(this.host, this.port) : null;
 	}
 
 	get response() {
@@ -75,9 +76,9 @@ class Server {
 
 	start(port) {
 		const server = http.createServer(this.handleRequest.bind(this));
-        server.listen(port, () => {
-            this.port = port
-            console.log(`Server running on port ${port}`)
+        server.listen(this.port, () => {
+
+            console.log(`Server running on port ${this.port}`)
         }
 		);
 	}
