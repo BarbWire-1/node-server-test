@@ -1,14 +1,16 @@
 
 const server = require('./server/myServer');
+//TODO - why this sometimes work and sometimes not???
+// there must be an issue in timing
 
 // usage of server.internal, an instance of InternalRequestHandler
 const requestParams = {
 	method: 'GET',
-    path: '/api/products/id/1',
-	//data: null, // default to null in class
+    path: '/api/products/id/2',
+	//data: null, // only if required - on POST or PUT (what about PATCH in general?)
 	// pass these two from the consuming server-instance??
-	hostname: 'localhost',
-	port: 3000,
+	//hostname: server.host,
+	//port: server.port,
 };
 
 server.internal
