@@ -1,8 +1,9 @@
 /* The JSONDataController class handles CRUD operations for a JSON database, including creating,
 reading, updating, and deleting records. */
 //TODO- add querySearch "apiUrl?key=value&....."
+// TODO after adding validator remove own validation-method
 const path = require('path');
-const Validator = require('./Validator')
+const Validator = require('./Validator');
 
 const JSONDatabase = require('./LocalJSONModel');
 const { getPostData } = require('../../utils');
@@ -19,7 +20,7 @@ class JSONDataController {
 		this.createSchema = {};
 		this.updateSchema = {};
 
-		// Instantiate a Validator object
+		// TEST
 		this.validator = new Validator();
 	}
 
@@ -52,7 +53,7 @@ class JSONDataController {
 		try {
 			/* This block is responsible for parsing and processing query parameters that are passed in the `paramRoute`
             variable. */
-            if (paramRoute) {
+			if (paramRoute) {
 				const queryObj = {};
 
 				// Split the params string into an array of paths and create key:value pairs
@@ -70,8 +71,7 @@ class JSONDataController {
 					}
 				}
 
-
-                const filteredRecords =
+				const filteredRecords =
 					await this.resource.findByQuery(queryObj);
 				//console.log({filteredRecords });
 				if (filteredRecords.length === 0) {
@@ -92,8 +92,7 @@ class JSONDataController {
 		}
 	}
 
-
-    async getRecord(req, res) {
+	async getRecord(req, res) {
 		try {
 			const record = await this.resource.findById(this.recordId);
 			console.log('ID: ', this.recordId);
@@ -122,16 +121,16 @@ class JSONDataController {
 				const body = await getPostData(req);
 				const requestData = JSON.parse(body);
 
-				// Validate request data against create schema
+				// validation
 				const newRecord = this.filterDataAgainstSchema(
 					requestData,
 					this.createSchema
 				);
 
-				// Create new record using validated data
+
 				const createdRecord = await this.resource.create(newRecord);
 
-				// Set response status code and data
+
 				this.statusCode = 201;
 				this.response = createdRecord;
 			}
@@ -145,7 +144,7 @@ class JSONDataController {
 			};
 		}
 
-		// Send response
+
 		this.respond(res);
 	}
 
@@ -190,14 +189,14 @@ class JSONDataController {
 	}
 	//TEST
 	/**
-     * The function `filterDataAgainstSchema` validates and filters request data based on a specified
-     * schema.
-     * @param requestData - The data that you want to filter based on a specified schema set up in the controller. This data typically comes in the form of an object.
-     * @param schema - The `schema` parameter defines the structure and validation rules for the data that is expected in the `requestData`. It contains keys that represent the fields expected in the data and their corresponding validation rules.
-     * Mismatches for key or rule trigger corresponding error messages
-     * @returns  an object containing the filtered data that matches the schema provided as input.
-     */
-    filterDataAgainstSchema(requestData, schema) {
+	 * The function `filterDataAgainstSchema` validates and filters request data based on a specified
+	 * schema.
+	 * @param requestData - The data that you want to filter based on a specified schema set up in the controller. This data typically comes in the form of an object.
+	 * @param schema - The `schema` parameter defines the structure and validation rules for the data that is expected in the `requestData`. It contains keys that represent the fields expected in the data and their corresponding validation rules.
+	 * Mismatches for key or rule trigger corresponding error messages
+	 * @returns  an object containing the filtered data that matches the schema provided as input.
+	 */
+	filterDataAgainstSchema(requestData, schema) {
 		const filteredData = {};
 
 		for (const key in schema) {

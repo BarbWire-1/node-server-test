@@ -7,7 +7,7 @@ const absoluteApiUrl = '/api/products/';
 
 // Initialize the ResourceController with the absolute file path and API URL
 const Products = new ResourceController(
-	absoluteFilePath, // either this way: path from ResourceController!!! OR absolutePath ?
+	absoluteFilePath, 
 	absoluteApiUrl
 );
 Products.initialize();

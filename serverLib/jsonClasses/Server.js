@@ -4,7 +4,6 @@ const http = require('http');
 const InternalRequestHandler = require('./InternalRequestHandler');
 const { customLog, setDebugMode } = require('../../utils');
 
-
 //TODO use .env
 //TODO1 - implement serving static files? support for multiple mimeTypes like:
 /*
@@ -22,7 +21,6 @@ const mimeTypes = {
         OR create different serverType-extensions?? options??
 */
 
-
 setDebugMode(false);
 
 class Server {
@@ -32,9 +30,7 @@ class Server {
 		this.controllers = controllers;
 		this.middlewares = [];
 		this._response = null;
-		this.internal = internal
-			? new InternalRequestHandler(this)
-			: null;
+		this.internal = internal ? new InternalRequestHandler(this) : null;
 	}
 
 	get response() {
@@ -59,7 +55,7 @@ class Server {
 		const url = req.url;
 
 		/* This part of the code is iterating over the controllers defined in the Server class and handling different HTTP request methods (GET, POST, PUT, DELETE) based on the request method and URL. */
-        for (const c of this.controllers) {
+		for (const c of this.controllers) {
 			const route = url.startsWith(`${c.apiUrl}`) && url !== c.apiUrl;
 			const routeParameters = url.slice(c.apiUrl.length);
 			const id =

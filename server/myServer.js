@@ -4,18 +4,12 @@ const Products = require('./controllers/productsController');
 const Server = require('../serverLib/jsonClasses/Server');
 
 const server = new Server([Products]); // the controllers for potentially multiple resources
-
+//TODO - look up "middleware" - validator also middleware?
 // server.use(async (req, res) => {
-// 	// Your authentication logic
-// });
-//
-// server.use(async (req, res) => {
-// 	// Your authorization logic
+// 	// eg autentication, authorisation....
 // });
 
 server.start();
-//console.log(server.response)
 
-// // Define the request type and URL you want to test
 
 module.exports = server;

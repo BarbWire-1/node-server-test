@@ -1,7 +1,8 @@
 /* The Validator class in JavaScript provides methods to validate data fields against a
 schema specified in the corresponding controller*/
 
-const { customLog } = require('../../utils')
+const { customLog } = require('../../utils');
+// TODO add other types - date objects etc
 
 class Validator {
 	constructor() {
@@ -50,15 +51,14 @@ class Validator {
 					throw new Error(`Validation failed for field '${key}'.`);
 				}
 
-				// Field passed validation, add it to the filtered data
+
 				filteredData[key] = value;
 			}
 		}
 
-		// Return the filtered data if all validation passes
+		
 		return filteredData;
 	}
 }
-
 
 module.exports = Validator;
