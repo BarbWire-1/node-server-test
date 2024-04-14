@@ -16,8 +16,7 @@ const mimeTypes = {
             '.png': 'image/png',
             '.jpg': 'image/jpg',
             '.gif': 'image/gif',
-            // Add more MIME types as needed
-        };
+            ...
 
         would need to change internal and request logic
         OR create different serverType-extensions?? options??
