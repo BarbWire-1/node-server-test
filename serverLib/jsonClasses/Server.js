@@ -33,7 +33,7 @@ class Server {
 		this.middlewares = [];
 		this._response = null;
 		this.internal = internal
-			? new InternalRequestHandler(this.host, this.port)
+			? new InternalRequestHandler(this)
 			: null;
 	}
 

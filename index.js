@@ -7,6 +7,8 @@ const server = require('./server/myServer');
 //api/products/ or '/api/products/[key]/[value]
 // routes actually like flattened path, arrays not included, not tested for deeply nested - might need flattening the JSON directly when in (?)
 // usage of server.internal, an instance of InternalRequestHandler
+
+//TODO there is something really badly wrong! Internal should only fake the request not handle response in any way
 const requestParams = {
 	method: 'GET',
     path: '/api/products/price/89.99'
@@ -15,6 +17,8 @@ const requestParams = {
 	//hostname: server.host,
 	//port: server.port,
 };
+
+
 
 
 

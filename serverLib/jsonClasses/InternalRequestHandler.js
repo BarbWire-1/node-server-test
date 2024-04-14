@@ -3,20 +3,20 @@ specified host and port, handling response data and passing it to a server's `ha
 const http = require('http');
 
 class InternalRequestHandler {
-	constructor(host, port) {
-        this.host = host;
-        this.port = port;
+	constructor(server) {
+        this.server = server
+
 
     }
 
 	async makeRequest(requestOptions) {
 		return new Promise((resolve, reject) => {
-			const { hostname = this.host, path, method, data } = requestOptions;
+			const { path, method, data } = requestOptions;
 
 			// Define request details
             const options = {
-                hostname: hostname,
-                port: this.port,
+                hostname: this.server.host,
+                port: this.server.port,
 				...requestOptions,
 				headers: {
 					'Content-Type': 'application/json', // Assuming JSON data
@@ -48,6 +48,7 @@ class InternalRequestHandler {
 		});
 	}
 
+
 	async makeInternalRequest(requestOptions) {
 		try {
 			// Make the internal request
@@ -65,6 +66,7 @@ class InternalRequestHandler {
 			console.error('Internal request error:', error);
 		}
 	}
+
 }
 
 module.exports = InternalRequestHandler;
