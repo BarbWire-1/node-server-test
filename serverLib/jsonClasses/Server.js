@@ -6,6 +6,22 @@ const { customLog, setDebugMode } = require('../../utils');
 
 
 //TODO use .env
+//TODO1 - implement serving static files? support for multiple mimeTypes like:
+/*
+const mimeTypes = {
+            '.html': 'text/html',
+            '.js': 'text/javascript',
+            '.css': 'text/css',
+            '.json': 'application/json',
+            '.png': 'image/png',
+            '.jpg': 'image/jpg',
+            '.gif': 'image/gif',
+            // Add more MIME types as needed
+        };
+
+        would need to change internal and request logic
+        OR create different serverType-extensions?? options??
+*/
 
 
 setDebugMode(false);
