@@ -24,7 +24,8 @@ class InternalRequestHandler {
             };
             //console.log(options)
 
-			// Create the request
+			// Create the request ->
+            //TODO implement getResponse here
 			const req = http.request(options, (res) => {
 				let responseData = '';
 

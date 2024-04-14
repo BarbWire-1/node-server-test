@@ -9,7 +9,7 @@ const server = require('./server/myServer');
 // usage of server.internal, an instance of InternalRequestHandler
 const requestParams = {
 	method: 'GET',
-    path: '/api/products/'
+    path: '/api/products/price/89.99'
 	//data: null, // only if required - on POST or PUT (what about PATCH in general?)
 	// pass these two from the consuming server-instance??
 	//hostname: server.host,
