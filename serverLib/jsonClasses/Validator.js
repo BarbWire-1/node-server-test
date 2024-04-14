@@ -1,4 +1,7 @@
-const customLog = require('../../utils')
+/* The Validator class in JavaScript provides methods to validate data fields against a
+schema specified in the corresponding controller*/
+
+const { customLog } = require('../../utils')
 
 class Validator {
 	constructor() {
@@ -57,19 +60,5 @@ class Validator {
 	}
 }
 
-// Example usage:
-// const validator = new Validator();
-// const requestData = {
-// 	title: 'Example Title',
-// 	description: 'Example Description',
-// 	price: 10,
-// };
-// const filteredData = validator.validateData(requestData, baseSchema);
-//
-// if (filteredData) {
-// 	console.log('Filtered data:', filteredData);
-// } else {
-// 	console.error('Validation error:', validator.message);
-// }
 
 module.exports = Validator;

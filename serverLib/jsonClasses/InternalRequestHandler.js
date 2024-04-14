@@ -1,3 +1,5 @@
+/* The `InternalRequestHandler` class in JavaScript is designed to make internal HTTP requests to a
+specified host and port, handling response data and passing it to a server's `handleRequest` method. */
 const http = require('http');
 
 class InternalRequestHandler {

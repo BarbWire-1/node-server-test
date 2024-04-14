@@ -1,4 +1,6 @@
-const ResourceController = require('../serverClasses/jsonClasses/LocalJSONController');
+/* This code snippet is setting up a resource controller for managing products data. Here is a
+breakdown of what each part of the code is doing: */
+const ResourceController = require('../../serverLib/jsonClasses/LocalJSONController');
 const path = require('path');
 const absoluteFilePath = path.resolve(__dirname, '../data/products.json');
 const absoluteApiUrl = '/api/products/';

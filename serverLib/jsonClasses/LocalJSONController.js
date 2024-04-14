@@ -1,4 +1,6 @@
-//TODO- add querySearch
+/* The JSONDataController class handles CRUD operations for a JSON database, including creating,
+reading, updating, and deleting records. */
+//TODO- add querySearch "apiUrl?key=value&....."
 const path = require('path');
 const Validator = require('./Validator')
 
@@ -21,18 +23,36 @@ class JSONDataController {
 		this.validator = new Validator();
 	}
 
+	/**
+	 * The `initialize` function is an asynchronous method that initializes a resource.
+	 */
 	async initialize() {
 		await this.resource.initialize();
 	}
+	/**
+	 * The function creates absolute file paths based on the provided file and base route.
+	 * @param file - The `file` parameter is the relative path of the file you want to create an absolute path for.
+	 * @param baseRoute - The `baseRoute` parameter typically refers to the base URL or route of an API
+	 * endpoint. It is used as a base for constructing the complete API URL.
+	 * @returns The function `createAbsolutePaths` returns an object with two properties:
+	 * `absoluteFilePath` which is the absolute path of the `file` parameter resolved using `__dirname`, and `absoluteApiUrl` which is the value of the `baseRoute` parameter.
+	 */
 	createAbsolutePaths(file, baseRoute) {
 		const absoluteFilePath = path.resolve(__dirname, file);
 		const absoluteApiUrl = baseRoute;
 		return { absoluteFilePath, absoluteApiUrl };
 	}
+
+	// TOD= - split this? - or at least rename to multiple?
+	/* The `getAll` method in the `JSONDataController` class is responsible for handling the retrieval
+    of records from the JSON database. It accepts three parameters: `req` (request), `res`
+    (response), and an optional `paramRoute` which contains query parameters for filtering records. */
 	async getAll(req, res, paramRoute) {
 		// working
 		try {
-			if (paramRoute) {
+			/* This block is responsible for parsing and processing query parameters that are passed in the `paramRoute`
+            variable. */
+            if (paramRoute) {
 				const queryObj = {};
 
 				// Split the params string into an array of paths and create key:value pairs
@@ -43,14 +63,15 @@ class JSONDataController {
 					for (let i = 0; i < keyValuePairs.length; i += 2) {
 						const key = keyValuePairs[i];
 						const value = keyValuePairs[i + 1];
-                        queryObj[ key ] = value;
-                        console.log(typeof key, typeof value)
+						queryObj[key] = value;
+						console.log(typeof key, typeof value);
 
 						if (key === 'id') this.recordId = value;
 					}
 				}
 
-				const filteredRecords =
+
+                const filteredRecords =
 					await this.resource.findByQuery(queryObj);
 				//console.log({filteredRecords });
 				if (filteredRecords.length === 0) {
@@ -71,7 +92,8 @@ class JSONDataController {
 		}
 	}
 
-	async getRecord(req, res) {
+
+    async getRecord(req, res) {
 		try {
 			const record = await this.resource.findById(this.recordId);
 			console.log('ID: ', this.recordId);
@@ -88,8 +110,8 @@ class JSONDataController {
 		}
 	}
 
-    async createRecord(req, res) {
-        this.message = '';
+	async createRecord(req, res) {
+		this.message = '';
 		try {
 			// Ensure the request URL matches the expected API URL
 			if (req.url !== this.apiUrl) {
@@ -116,9 +138,11 @@ class JSONDataController {
 		} catch (error) {
 			// Handle any errors that occur during validation or record creation
 			console.log(error);
-            this.statusCode = 500;
+			this.statusCode = 500;
 
-			this.response = { message: `Internal server error. ${this.message}`};
+			this.response = {
+				message: `Internal server error. ${this.message}`,
+			};
 		}
 
 		// Send response
@@ -165,7 +189,15 @@ class JSONDataController {
 		}
 	}
 	//TEST
-	filterDataAgainstSchema(requestData, schema) {
+	/**
+     * The function `filterDataAgainstSchema` validates and filters request data based on a specified
+     * schema.
+     * @param requestData - The data that you want to filter based on a specified schema set up in the controller. This data typically comes in the form of an object.
+     * @param schema - The `schema` parameter defines the structure and validation rules for the data that is expected in the `requestData`. It contains keys that represent the fields expected in the data and their corresponding validation rules.
+     * Mismatches for key or rule trigger corresponding error messages
+     * @returns  an object containing the filtered data that matches the schema provided as input.
+     */
+    filterDataAgainstSchema(requestData, schema) {
 		const filteredData = {};
 
 		for (const key in schema) {
@@ -173,8 +205,8 @@ class JSONDataController {
 				const fieldSchema = schema[key];
 
 				// Check if the field is required but missing in the request data
-                if (fieldSchema.required && !requestData.hasOwnProperty(key)) {
-                    this.message += `'${key}' is required`;
+				if (fieldSchema.required && !requestData.hasOwnProperty(key)) {
+					this.message += `'${key}' is required`;
 					throw new Error(this.message);
 				}
 
@@ -183,10 +215,9 @@ class JSONDataController {
 					const value = requestData[key];
 
 					// Check if the field value matches the specified type
-                    if (typeof value !== fieldSchema.type) {
-                        this.message += `'${key}' must be of type ${fieldSchema.type}`;
+					if (typeof value !== fieldSchema.type) {
+						this.message += `'${key}' must be of type ${fieldSchema.type}`;
 						throw new Error(this.message);
-
 					}
 
 					// Add the validated field to the filtered data
@@ -209,7 +240,9 @@ class JSONDataController {
 			} else {
 				await this.resource.remove(id);
 				this.statusCode = 200;
-				this.response = { message: `Record with id ${id} has been removed` };
+				this.response = {
+					message: `Record with id ${id} has been removed`,
+				};
 				this.respond(res);
 			}
 		} catch (error) {

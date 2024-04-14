@@ -1,18 +1,25 @@
+/* The Server class in the JavaScript code handles HTTP requests by routing them to controllers based
+on the request method and URL, with the ability to apply middleware and manage responses. */
 const http = require('http');
 const InternalRequestHandler = require('./InternalRequestHandler');
 const { customLog, setDebugMode } = require('../../utils');
 
+
+//TODO use .env
+
+
 setDebugMode(false);
 
-
 class Server {
-    constructor (controllers, internal = true, port = 3000, host = 'localhost') {
-        this.port = port;
-        this.host = host;
+	constructor(controllers, internal = true, port = 3000, host = 'localhost') {
+		this.port = port;
+		this.host = host;
 		this.controllers = controllers;
 		this.middlewares = [];
-        this._response = null;
-        this.internal = internal ? new InternalRequestHandler(this.host, this.port) : null;
+		this._response = null;
+		this.internal = internal
+			? new InternalRequestHandler(this.host, this.port)
+			: null;
 	}
 
 	get response() {
@@ -21,7 +28,7 @@ class Server {
 
 	async handleRequest(req, res) {
 		customLog(req.url, req.method);
-		// Apply middleware
+		// Apply middleware - not in use til now
 		for (const middleware of this.middlewares) {
 			try {
 				await middleware(req, res);
@@ -36,7 +43,8 @@ class Server {
 
 		const url = req.url;
 
-		for (const c of this.controllers) {
+		/* This part of the code is iterating over the controllers defined in the Server class and handling different HTTP request methods (GET, POST, PUT, DELETE) based on the request method and URL. */
+        for (const c of this.controllers) {
 			const route = url.startsWith(`${c.apiUrl}`) && url !== c.apiUrl;
 			const routeParameters = url.slice(c.apiUrl.length);
 			const id =
@@ -70,17 +78,15 @@ class Server {
 					break;
 			}
 			this._response = c.response;
-            customLog(c.response);
+			customLog(c.response);
 		}
 	}
 
-	start(port) {
+	start() {
 		const server = http.createServer(this.handleRequest.bind(this));
-        server.listen(this.port, () => {
-
-            console.log(`Server running on port ${this.port}`)
-        }
-		);
+		server.listen(this.port, () => {
+			console.log(`Server running on port ${this.port}`);
+		});
 	}
 
 	use(middleware) {

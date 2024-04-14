@@ -2,3 +2,5 @@ node_modules/
 YTVid/
 
 *.txt
+.env
+.vscode
