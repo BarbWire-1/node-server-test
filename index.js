@@ -19,7 +19,7 @@ const requestParams = {
 
 
     server.internal
-        .makeRequest(requestParams)
+        .makeRequest(requestParams)// I FIRST need to have the response passed the server's handleRequest I think...
         .then((responseData) => {
             let result = JSON.parse(responseData);
             console.log('Got Data from internal request!', result);
