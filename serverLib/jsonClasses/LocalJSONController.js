@@ -148,7 +148,8 @@ class JSONDataController {
 		this.respond(res);
 	}
 
-	async updateRecord(req, res, id) {
+    async updateRecord(req, res, id) {
+        // TODO this should be caught by validator now. Test and adjust - currently NO response. that is not nice, need to send message
 		try {
 			const record = await this.resource.findById(id);
 			if (!record) {
@@ -162,7 +163,7 @@ class JSONDataController {
 			const requestData = JSON.parse(body);
 
 			try {
-				const filteredData = this.filterDataAgainstSchema(
+				const filteredData = this.validator.validateData(
 					requestData,
 					this.updateSchema
 				);
@@ -176,9 +177,10 @@ class JSONDataController {
 				// Now you can use filteredData to update the record
 			} catch (error) {
 				this.statusCode = 400;
-				this.response = { message: 'Invalid request' };
+				this.response = 'Invalid request. ' + error.message ;
 				// Handle invalid keys
-				console.error(error.message);
+                //console.error(error.message);
+                throw error
 			}
 
 			this.respond(res);

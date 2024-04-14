@@ -46,7 +46,8 @@ class Validator {
 				const fieldSchema = schema[key];
 				const value = data[key];
 
-				if (!this.validateField(key, value, fieldSchema)) {
+                if (!this.validateField(key, value, fieldSchema)) {
+                    console.warn(this.message)
 					// Validation failed for this field
 					throw new Error(`Validation failed for field '${key}'.`);
 				}
@@ -56,7 +57,7 @@ class Validator {
 			}
 		}
 
-		
+
 		return filteredData;
 	}
 }

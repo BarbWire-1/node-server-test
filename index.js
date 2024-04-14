@@ -23,7 +23,7 @@ server.internal
 		let message = '';
 
         if (result.length) {
-            message = "Yeah! I made it through the async hell!"
+            message = "Yeah! I made it through the async (params, variableNames...???) hell!"
 			result.forEach((r) => console.log('id: ', r.id));
 		} else {
 			message =
@@ -35,3 +35,14 @@ server.internal
 	.catch((error) => {
 		console.error(error);
 	});
+
+
+
+    // server.internal
+	// 	.makeInternalRequest(requestParams)
+	// 	.then(() => {
+	// 		console.log('Internal request sent to server', server.response);
+	// 	})
+	// 	.catch((error) => {
+	// 		console.error(error);
+	// 	});
