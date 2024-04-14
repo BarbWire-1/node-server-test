@@ -27,7 +27,8 @@ server.internal
 			result.forEach((r) => console.log('id: ', r.id));
 		} else {
 			message =
-				"That either didn't find a match, or more serious didn't WORK!";
+                "That either didn't find a match, or more serious didn't WORK!";
+            // also logs message: 'No Match Found"} from controller.getAll()
 		}
 		console.log(message, result);
 	})
