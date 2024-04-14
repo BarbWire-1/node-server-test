@@ -1,5 +1,6 @@
 const server = require('./server/myServer');
 //TODO - why this sometimes work and sometimes not???
+//TODO check error-handling, I think I made a mess with handling differently at different stages
 // there must be an issue in timing
 
 //api/products/ or '/api/products/[key]/[value]

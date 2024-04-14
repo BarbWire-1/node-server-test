@@ -127,9 +127,7 @@ class JSONDataController {
 					this.createSchema
 				);
 
-
 				const createdRecord = await this.resource.create(newRecord);
-
 
 				this.statusCode = 201;
 				this.response = createdRecord;
@@ -144,51 +142,44 @@ class JSONDataController {
 			};
 		}
 
-
 		this.respond(res);
 	}
 
-    async updateRecord(req, res, id) {
-        // TODO this should be caught by validator now. Test and adjust - currently NO response. that is not nice, need to send message
-		try {
-			const record = await this.resource.findById(id);
-			if (!record) {
-				res.writeHead(404, contentType);
-				res.end(JSON.stringify({ message: 'record Not Found' }));
-				return;
-			}
-
-			// Parse the incoming data from the request body
-			let body = await getPostData(req);
-			const requestData = JSON.parse(body);
-
-			try {
-				const filteredData = this.validator.validateData(
-					requestData,
-					this.updateSchema
-				);
-				// filteredData now contains only the valid fields according to the update schema
-				const updRecord = await this.resource.update(id, {
-					...record,
-					...filteredData,
-				});
-				this.statusCode = 200;
-				this.response = updRecord;
-				// Now you can use filteredData to update the record
-			} catch (error) {
-				this.statusCode = 400;
-				this.response = 'Invalid request. ' + error.message ;
-				// Handle invalid keys
-                //console.error(error.message);
-                throw error
-			}
-
-			this.respond(res);
-		} catch (error) {
-			console.log(error);
+	async updateRecord(req, res, id) {
+		const record = await this.resource.findById(id);
+		if (!record) {
+			res.writeHead(404, contentType);
+			res.end(JSON.stringify({ message: 'Record Not Found' }));
 			return;
 		}
+
+		// Parse the incoming data from the request body
+		let body = await getPostData(req);
+		const requestData = JSON.parse(body);
+
+		const filteredData = this.validator.validateData(
+			requestData,
+			this.updateSchema
+		);
+
+		// filteredData now contains only the valid fields according to the update schema
+		try {
+			const updRecord = await this.resource.update(id, {
+				...record,
+				...filteredData,
+			});
+			this.statusCode = 200;
+			this.response = updRecord;
+			// Now you can use filteredData to update the record
+			this.respond(res);
+		} catch (error) {
+			this.statusCode = 400;
+			this.response = 'Invalid request. ' + error.message;
+			console.error(error.message);
+			this.respond(res);
+		}
 	}
+
 	//TEST
 	/**
 	 * The function `filterDataAgainstSchema` validates and filters request data based on a specified

@@ -79,7 +79,15 @@ class Server {
 					break;
 				case 'PUT':
 					if (route) {
-						await c.updateRecord(req, res, id);
+						try {
+							await c.updateRecord(req, res, id);
+						} catch (error) {
+							console.error('Update record error:', error);
+							res.writeHead(400, {
+								'Content-Type': 'application/json',
+							});
+							res.end(JSON.stringify({ message: error.message }));
+						}
 					}
 					break;
 				case 'DELETE':
