@@ -1,7 +1,7 @@
 /* The JSONDataController class handles CRUD operations for a JSON database, including creating,
 reading, updating, and deleting records. */
 //TODO- add querySearch "apiUrl?key=value&....."
-// TODO after adding validator remove own validation-method
+
 const path = require('path');
 const Validator = require('./Validator');
 
@@ -20,7 +20,7 @@ class JSONDataController {
 		this.createSchema = {};
 		this.updateSchema = {};
 
-		// TEST
+		// TODO - not yet implemented, running own method instead
 		this.validator = new Validator();
 	}
 
