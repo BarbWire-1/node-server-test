@@ -4,7 +4,7 @@ const server = require('./server/myServer');
 // usage of server.internal, an instance of InternalRequestHandler
 const requestParams = {
 	method: 'GET',
-    path: '/api/products/id/2',
+    path: '/api/products/id/1',
 	//data: null, // default to null in class
 	// pass these two from the consuming server-instance??
 	hostname: 'localhost',

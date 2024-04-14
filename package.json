@@ -1,15 +1,15 @@
 {
   "name": "vanilla_node_rest_api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Testing setup for a reusable server structure with dynamic routes depending on source-structure for JSON responses",
   "main": "index.js",
   "scripts": {
     "start": "node main.js",
     "dev": "nodemon main.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["node", "server", "CRUD", "JSON", "http"],
+  "author": "Barbara Kälin aka BarbWire_1",
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5"
