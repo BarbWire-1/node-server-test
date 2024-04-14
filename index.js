@@ -4,7 +4,7 @@ const server = require('./server/myServer');
 // there must be an issue in timing
 
 
-//api/products/
+//api/products/ or '/api/proDucts/[key]/[value]
 // routes actually like flattened path, arrays not included, not tested for deeply nested - might need flattening the JSON directly when in (?)
 // usage of server.internal, an instance of InternalRequestHandler
 const requestParams = {
