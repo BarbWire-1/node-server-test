@@ -37,8 +37,10 @@ class Server {
 		return this._response;
 	}
 
-	async handleRequest(req, res) {
-		customLog(req.url, req.method);
+    async handleRequest(req, res) {
+        //customLog({ req })
+
+
 		// Apply middleware - not in use til now
 		for (const middleware of this.middlewares) {
 			try {

@@ -1,8 +1,7 @@
-
 const http = require('http');
 const { customLog, setDebugMode } = require('../../utils');
 
-setDebugMode(true)
+setDebugMode(false);
 // making a request and passing req,res to server.handleRequest
 class InternalRequestHandler {
 	constructor(server) {
@@ -10,62 +9,67 @@ class InternalRequestHandler {
 	}
 
 	async makeRequest(requestOptions) {
-    const { path, method, data } = requestOptions;
+		const { path, method, data } = requestOptions;
 
-    // Define request details
-    const options = {
-        hostname: this.server.host,
-        port: this.server.port,
-        method: method,
-        path: path,
-        data: data ,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
-        customLog("Should log here!")
-        customLog(options)
+		// Define request details
+		const options = {
+			hostname: this.server.host,
+			port: this.server.port,
+			method: method,
+			path: path,
+			data: data,
+			headers: {
+			    'Content-Type': 'application/json',
+			},
+		};
+		customLog('Should log here!'); // WTF- this does not log
+		customLog(
+			`Internal makeRequest (27) options(?) ${JSON.stringify(options) || 'no options here'}`
+		);
 
-    try {
-        // Make the HTTP request
-        const responseData = await new Promise((resolve, reject) => {
-            const req = http.request(options, (res) => {
-                let responseData = '';
+		try {
+			// Make the HTTP request
+			const responseData = await new Promise((resolve, reject) => {
+				const req = http.request(options, (res) => {
+					let responseData = '';
 
+					// Collect response data
+					res.on('data', (chunk) => {
+						responseData += chunk;
+					});
 
-                // Collect response data
-                res.on('data', (chunk) => {
-                    responseData += chunk;
-                });
+					res.on('end', () => {
+						resolve(responseData);
+					});
+				});
 
-                res.on('end', () => {
-                    console.log('Response data:', responseData); // Log response data
-                    resolve(responseData);
-                });
-                customLog({ responseData });
-            });
+				req.on('error', (error) => {
+					reject(error);
+				});
 
-            req.on('error', (error) => {
-                reject(error);
-            });
+				//if (data) req.write(JSON.stringify(data));
 
-            if (data) req.write(JSON.stringify(data));
+				req.end();
+			});
 
-            req.end();
-        });
-
-        // Pass the response data to the server's handleRequest method
-        await this.server.handleRequest(
-            { url: requestOptions.path, method: requestOptions.method },
-            null
-        );
-        return responseData;
-    } catch (error) {
-        console.error('Internal request error:', error);
-        throw error;
-    }
-}
-
+			// Pass the response data to the server's handleRequest method
+			await this.server.handleRequest(
+				{
+					url: path,
+					method: method,
+					data: data,
+				},
+				null
+			);
+			customLog(
+				`internal (44) responseData: ${JSON.stringify(responseData) || 'no response here!'}`
+			);
+			return responseData;
+		} catch (error) {
+			console.error('Internal request error:', error);
+			throw error;
+		}
+	}
 }
 
 module.exports = InternalRequestHandler;

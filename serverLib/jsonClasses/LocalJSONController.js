@@ -2,11 +2,16 @@
 reading, updating, and deleting records. */
 //TODO- add querySearch "apiUrl?key=value&....."
 
+
+
 const path = require('path');
 const Validator = require('./Validator');
 
 const JSONDatabase = require('./LocalJSONModel');
 const { getPostData } = require('../../utils');
+const { customLog, setDebugMode } = require('../../utils');
+
+setDebugMode(true);
 const contentType = { 'Content-Type': 'application/json' };
 
 class JSONDataController {
@@ -48,7 +53,8 @@ class JSONDataController {
 	/* The `getAll` method in the `JSONDataController` class is responsible for handling the retrieval
     of records from the JSON database. It accepts three parameters: `req` (request), `res`
     (response), and an optional `paramRoute` which contains query parameters for filtering records. */
-	async getAll(req, res, paramRoute) {
+    async getAll(req, res, paramRoute) {
+        customLog(`LocalJSONDataController (55), paramRoute: ${paramRoute}`);
 		// working
 		try {
 			/* This block is responsible for parsing and processing query parameters that are passed in the `paramRoute`
@@ -76,7 +82,7 @@ class JSONDataController {
 				//console.log({filteredRecords });
 				if (filteredRecords.length === 0) {
 					this.statusCode = 404;
-					this.response = { message: 'No Match Found' };
+					this.response = { message: 'No Match Found (controller, filtered)' };
 				} else {
 					this.statusCode = 200;
 					this.response = filteredRecords;
@@ -152,7 +158,7 @@ class JSONDataController {
 			res.end(JSON.stringify({ message: 'Record Not Found' }));
 			return;
 		}
-
+customLog(req)
 		// Parse the incoming data from the request body
 		let body = await getPostData(req);
 		const requestData = JSON.parse(body);
