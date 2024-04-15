@@ -5,8 +5,8 @@ const server = require('./server/myServer');
 
 const requestParams = {
 	method: 'GET',
-	path: '/api/products/',
-	data: { price: 89.99 }, // only if required - on POST or PUT (what about PATCH in general?)
+	path: '/api/products/id/1',
+	//data: { price: 89.99 }, // only if required - on POST or PUT (what about PATCH in general?)
 };
 
 server.internal
@@ -20,7 +20,7 @@ server.internal
 		} else {
 			message =
 				"That either didn't find a match, or more serious didn't WORK!";
-			// also logs message: 'No Match Found"} from controller.getAll()
+
 		}
 
 		console.log(message, server.response);
@@ -28,12 +28,3 @@ server.internal
 	.catch((error) => {
 		console.error(error);
 	});
-
-// server.internal
-// 	.makeInternalRequest(requestParams)
-// 	.then(() => {
-// 		console.log('Internal request sent to server', server.response);
-// 	})
-// 	.catch((error) => {
-// 		console.error(error);
-// 	});

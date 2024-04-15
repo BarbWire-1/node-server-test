@@ -82,7 +82,8 @@ class Server {
 					break;
 				case 'PUT':
 					if (route) {
-						try {
+                        try {
+                            customLog("Should update")
 							await c.updateRecord(req, res, id);
 						} catch (error) {
 							console.error('Update record error:', error);
