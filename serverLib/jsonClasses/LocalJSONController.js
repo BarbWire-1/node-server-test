@@ -2,6 +2,8 @@
 reading, updating, and deleting records. */
 //TODO- add querySearch "apiUrl?key=value&....."
 
+//TODO need to pass current request here handle correctly for internal
+
 
 
 const path = require('path');
@@ -116,7 +118,8 @@ class JSONDataController {
 		}
 	}
 
-	async createRecord(req, res) {
+    async createRecord(req, res) {
+
 		this.message = '';
 		try {
 			// Ensure the request URL matches the expected API URL
@@ -248,14 +251,16 @@ customLog(req)
 			console.log(error);
 		}
 	}
-//TODO this is very ugly to prevent from throwing for fakeQuest from internal
+//TODO this is very ugly to prevent from throwing for fakeQuest from internal, need to handle this more clever
     respond(res) {
         try {
             res.writeHead(this.statusCode, contentType);
              return res.end(JSON.stringify(this.response));
 
         } catch (error) {
-console.log("INTERNAL REQUEST")
+
+        console.log('\x1b[33m\x1b[1mINTERNAL REQUEST\x1b[0m');
+
         }
 
 	}
