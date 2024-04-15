@@ -1,6 +1,7 @@
 const server = require('./server/myServer');
 //TODO - why this sometimes work and sometimes not???
 //TODO check error-handling, I think I made a mess with handling differently at different stages
+// TODO check errorHandling and/or process difference when doing internal request - now works
 // there must be an issue in timing
 
 //api/products/ or '/api/products/[key]/[value]
@@ -9,9 +10,10 @@ const server = require('./server/myServer');
 
 //TODO there is something really badly wrong! Internal should only fake the request not handle response in any way - so sometimes needs to run rs several times to get the data and does multiple requests...that is :(
 const requestParams = {
-	method: 'PUT',
-	path: '/api/products/id/2',
-	data: {"price": 22.22}, // only if required - on POST or PUT (what about PATCH in general?)
+	method: 'GET',
+    path: '/api/products/id/2',
+    
+	//data: {"price": 22.22}, // only if required - on POST or PUT (what about PATCH in general?)
 	// pass these two from the consuming server-instance??
 	//hostname: server.host,
 	//port: server.port,
