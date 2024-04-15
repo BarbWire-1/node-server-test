@@ -54,7 +54,8 @@ class Server {
 			}
 		}
 
-		const url = req.url;
+        const url = req.url ;
+
 
 		/* This part of the code is iterating over the controllers defined in the Server class and handling different HTTP request methods (GET, POST, PUT, DELETE) based on the request method and URL. */
 		for (const c of this.controllers) {

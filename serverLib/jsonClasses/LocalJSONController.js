@@ -76,17 +76,18 @@ class JSONDataController {
 						if (key === 'id') this.recordId = value;
 					}
 				}
-
-				const filteredRecords =
-					await this.resource.findByQuery(queryObj);
-				//console.log({filteredRecords });
-				if (filteredRecords.length === 0) {
-					this.statusCode = 404;
-					this.response = { message: 'No Match Found (controller, filtered)' };
-				} else {
-					this.statusCode = 200;
-					this.response = filteredRecords;
-				}
+                if (queryObj) {
+                    const filteredRecords =
+                        await this.resource.findByQuery(queryObj);
+                    //console.log({filteredRecords });
+                    if (filteredRecords.length === 0) {
+                        this.statusCode = 404;
+                        this.response = { message: 'No Match Found (controller (85)' };
+                    } else {
+                        this.statusCode = 200;
+                        this.response = filteredRecords;
+                    }
+                }
 			} else {
 				const records = await this.resource.findAll();
 				this.statusCode = 200;
@@ -249,10 +250,14 @@ customLog(req)
 	}
 //TODO this is very ugly to prevent from throwing for fakeQuest from internal
     respond(res) {
-        if (res) {
+        try {
             res.writeHead(this.statusCode, contentType);
-            return res.end(JSON.stringify(this.response));
+             return res.end(JSON.stringify(this.response));
+
+        } catch (error) {
+console.log("INTERNAL REQUEST")
         }
+
 	}
 }
 

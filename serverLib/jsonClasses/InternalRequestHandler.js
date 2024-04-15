@@ -26,12 +26,12 @@ class InternalRequestHandler {
 		customLog(
 			`Internal makeRequest (27) options(?) ${JSON.stringify(options) || 'no options here'}`
 		);
-
+let responseData = '';
 		try {
 			// Make the HTTP request
-			const responseData = await new Promise((resolve, reject) => {
+			responseData = await new Promise((resolve, reject) => {
 				const req = http.request(options, (res) => {
-					let responseData = '';
+
 
 					// Collect response data
 					res.on('data', (chunk) => {
@@ -59,12 +59,12 @@ class InternalRequestHandler {
 					method: method,
 					data: data,
 				},
-				null
+				responseData
 			);
 			customLog(
 				`internal (44) responseData: ${JSON.stringify(responseData) || 'no response here!'}`
 			);
-			return responseData;
+			//return responseData;
 		} catch (error) {
 			console.error('Internal request error:', error);
 			throw error;

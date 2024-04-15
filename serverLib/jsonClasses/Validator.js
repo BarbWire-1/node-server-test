@@ -10,23 +10,26 @@ class Validator {
 	}
 
 	// Validate a single field against its schema
-	validateField(key, value, fieldSchema) {
-		if (fieldSchema.required && !value) {
+    validateField(key, value, fieldSchema) {
+
+
+        const { required, type, minLength, maxLength } = fieldSchema;
+		if (required && !value) {
 			this.message += `'${key}' is required. `;
 			return false;
 		}
-
-		if (fieldSchema.type && typeof value !== fieldSchema.type) {
-			this.message += `'${key}' must be of type ${fieldSchema.type}. `;
+        if(type === 'number') value = +value
+		if (type && typeof value !== type) {
+			this.message += `'${key}' must be of type ${type}. `;
 			return false;
 		}
 
 		if (
-			typeof value === 'string' &&
-			((fieldSchema.minLength && value.length < fieldSchema.minLength) ||
-				(fieldSchema.maxLength && value.length > fieldSchema.maxLength))
+			type === 'string' &&
+			((minLength && value.length < minLength) ||
+				(maxLength && value.length > maxLength))
 		) {
-			this.message += `'${key}' must be between ${fieldSchema.minLength} and ${fieldSchema.maxLength} characters long. `;
+			this.message += `'${key}' must be between ${minLength} and ${maxLength} characters long. `;
 			return false;
 		}
 

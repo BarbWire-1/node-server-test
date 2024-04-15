@@ -19,7 +19,7 @@ function getPostData(req) {
                 resolve(body)
             })
         } catch (error) {
-reject(error)
+        reject(error)
         }
     })
 }

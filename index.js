@@ -5,7 +5,7 @@ const server = require('./server/myServer');
 // It works in a way but triggers wrong response data (code/message)
 const requestParams = {
 	method: 'GET',
-	path: '/api/products/',
+	path: '/api/products/id/2',
 	data: { price: 89.99 }, // only if required - on POST or PUT (what about PATCH in general?)
 };
 
