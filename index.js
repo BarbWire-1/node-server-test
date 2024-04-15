@@ -2,10 +2,10 @@ const server = require('./server/myServer');
 //TODO - internalRequest totally messes up all handling now by sending a "fakeRequest"
 // I THINK, I got it!!! using internal the controller must know about req (???) to handle incoming data (???)
 // and consuming server._result for now, but breaks for sending data!!!!
-// It works in a way but triggers wrong response data (code/message)
+
 const requestParams = {
 	method: 'GET',
-	path: '/api/products/id/2',
+	path: '/api/products/',
 	data: { price: 89.99 }, // only if required - on POST or PUT (what about PATCH in general?)
 };
 
