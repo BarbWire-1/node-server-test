@@ -147,7 +147,7 @@ class JSONDataController {
 
 	async updateRecord(req, res, id) {
 		const record = await this.resource.findById(id);
-		if (!record) {
+		if (!res) {
 			res.writeHead(404, contentType);
 			res.end(JSON.stringify({ message: 'Record Not Found' }));
 			return;
@@ -241,10 +241,12 @@ class JSONDataController {
 			console.log(error);
 		}
 	}
-
-	respond(res) {
-		res.writeHead(this.statusCode, contentType);
-		return res.end(JSON.stringify(this.response));
+//TODO this is very ugly to prevent from throwing for fakeQuest from internal
+    respond(res) {
+        if (res) {
+            res.writeHead(this.statusCode, contentType);
+            return res.end(JSON.stringify(this.response));
+        }
 	}
 }
 
