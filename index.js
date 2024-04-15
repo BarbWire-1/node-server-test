@@ -9,9 +9,9 @@ const server = require('./server/myServer');
 
 //TODO there is something really badly wrong! Internal should only fake the request not handle response in any way - so sometimes needs to run rs several times to get the data and does multiple requests...that is :(
 const requestParams = {
-	method: 'GET',
-	path: '/api/products/price/89.99',
-	//data: {"price": 89.99}, // only if required - on POST or PUT (what about PATCH in general?)
+	method: 'PUT',
+	path: '/api/products/id/2',
+	data: {"price": 22.22}, // only if required - on POST or PUT (what about PATCH in general?)
 	// pass these two from the consuming server-instance??
 	//hostname: server.host,
 	//port: server.port,
@@ -22,16 +22,15 @@ server.internal
 	.then(() => {
 		let result = server._response;// just for testing using the initial private prop
 		let message = '';
-
-
-            if (result?.length) {
-                message = "Yeah! I made it through the async (params, variableNames...???) hell!"
-                result.forEach((r) => console.log('id: ', r.id));
-            } else {
-                message =
-                    "That either didn't find a match, or more serious didn't WORK!";
-                // also logs message: 'No Match Found"} from controller.getAll()
-            }
+        if (result?.length) {
+            message = "Yeah! I made it!"
+            result.forEach((r) => console.log('id: ', r.id));
+        }
+            // } else {
+            //     message =
+            //         "That either didn't find a match, or more serious didn't WORK!";
+            //     // also logs message: 'No Match Found"} from controller.getAll()
+            // }
 
 		console.log(message, server._response);
 	})
