@@ -2,7 +2,7 @@
 reading, updating, and deleting records. */
 //TODO- add querySearch "apiUrl?key=value&....."
 
-//TODO need to pass current request here handle correctly for internal
+//TODO1.1.1. need to pass current request here handle correctly for internal
 
 
 
@@ -56,7 +56,7 @@ class JSONDataController {
     of records from the JSON database. It accepts three parameters: `req` (request), `res`
     (response), and an optional `paramRoute` which contains query parameters for filtering records. */
     async getAll(req, res, paramRoute) {
-        customLog(`LocalJSONDataController (55), paramRoute: ${paramRoute}`);
+        customLog(`LocalJSONDataController (59), paramRoute: ${paramRoute}`);
 		// working
 		try {
 			/* This block is responsible for parsing and processing query parameters that are passed in the `paramRoute`
@@ -81,7 +81,7 @@ class JSONDataController {
                 if (queryObj) {
                     const filteredRecords =
                         await this.resource.findByQuery(queryObj);
-                    //console.log({filteredRecords });
+                console.log({filteredRecords });
                     if (filteredRecords.length === 0) {
                         this.statusCode = 404;
                         this.response = { message: 'No Match Found (controller (85)' };

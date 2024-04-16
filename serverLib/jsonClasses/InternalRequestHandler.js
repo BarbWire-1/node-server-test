@@ -1,7 +1,7 @@
 const http = require('http');
 const { customLog, setDebugMode } = require('../../utils');
 
-setDebugMode(false);
+setDebugMode(true);
 // making a request and passing req,res to server.handleRequest
 class InternalRequestHandler {
 	constructor(server) {

@@ -5,7 +5,7 @@ const server = require('./server/myServer');
 
 const requestParams = {
 	method: 'GET',
-	path: '/api/products/id/3',
+	path: '/api/products/id/2',
 	//data: { price: 89.99 }, // only if required - on POST or PUT (what about PATCH in general?)
 };
 
@@ -14,7 +14,7 @@ server.internal
 	.then(() => {
 		let data = server.response; // just for testing using the initial private prop
         let message = 'Yeah! I made it!';
-        
+
 		if (data?.length) {
 			data.forEach((r) => console.log('id: ', r.id));
 		} else {
@@ -22,8 +22,8 @@ server.internal
 				"That either didn't find a match, or more serious didn't WORK!";
 
 		}
-
-		console.log(message, server.response);
+console.log("statusCode: " + server.statusCode)// undefined!
+		console.log(message, server.statusCode,server.response);
 	})
 	.catch((error) => {
 		console.error(error);

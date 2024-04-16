@@ -21,7 +21,7 @@ const mimeTypes = {
         OR create different serverType-extensions?? options??
 */
 
-setDebugMode(false);
+setDebugMode(true);
 
 class Server {
 	constructor(controllers, internal = true, port = 3000, host = 'localhost') {
@@ -38,7 +38,7 @@ class Server {
 	}
 
     async handleRequest(req, res) {
-        //customLog({ req })
+        customLog({ res })
 
 
 		// Apply middleware - not in use til now
