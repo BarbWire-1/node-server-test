@@ -13,7 +13,7 @@ const JSONDatabase = require('./LocalJSONModel');
 const { getPostData } = require('../../utils');
 const { customLog, setDebugMode } = require('../../utils');
 
-setDebugMode(true);
+setDebugMode(false);
 const contentType = { 'Content-Type': 'application/json' };
 
 class JSONDataController {
@@ -157,13 +157,15 @@ class JSONDataController {
 
 	async updateRecord(req, res, id) {
 		const record = await this.resource.findById(id);
-		if (!res) {
+		if (!req.data) {
 			res.writeHead(404, contentType);
 			res.end(JSON.stringify({ message: 'Record Not Found' }));
 			return;
 		}
 customLog(req)
-		// Parse the incoming data from the request body
+        // Parse the incoming data from the request body
+
+        console.log({ res })
 		let body = await getPostData(req);
 		const requestData = JSON.parse(body);
 

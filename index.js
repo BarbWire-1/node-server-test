@@ -6,7 +6,7 @@ const server = require('./server/myServer');
 const requestParams = {
 	method: 'GET',
 	path: '/api/products/id/2',
-	//data: { price: 89.99 }, // only if required - on POST or PUT (what about PATCH in general?)
+	//data: { price: 489.99 }, // only if required - on POST or PUT (what about PATCH in general?)
 };
 
 server.internal

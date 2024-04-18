@@ -21,7 +21,7 @@ const mimeTypes = {
         OR create different serverType-extensions?? options??
 */
 
-setDebugMode(true);
+setDebugMode(false);
 
 class Server {
 	constructor(controllers, internal = true, port = 3000, host = 'localhost') {
@@ -54,11 +54,12 @@ class Server {
 			}
 		}
 
-        const url = req.url ;
+
 
 
 		/* This part of the code is iterating over the controllers defined in the Server class and handling different HTTP request methods (GET, POST, PUT, DELETE) based on the request method and URL. */
-		for (const c of this.controllers) {
+        for (const c of this.controllers) {
+			const url = req.url || c.apiUrl + req.path;
 			const route = url.startsWith(`${c.apiUrl}`) && url !== c.apiUrl;
 			const routeParameters = url.slice(c.apiUrl.length);
 			const id =
@@ -82,8 +83,8 @@ class Server {
 					break;
 				case 'PUT':
 					if (route) {
-                        try {
-                            customLog("Should update")
+						try {
+							customLog('Should update');
 							await c.updateRecord(req, res, id);
 						} catch (error) {
 							console.error('Update record error:', error);

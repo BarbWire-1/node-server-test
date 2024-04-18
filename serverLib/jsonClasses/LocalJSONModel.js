@@ -35,14 +35,6 @@ class LocalJSONModel {
 		return this.data.find((item) => item.id === id);
 	}
 
-	/**
-	 * The create function asynchronously adds a new item to the data array, assigns a unique id to it,
-	 * saves the updated data to a file, and then returns the newly created item.
-	 * @param item - The `item` parameter is an object that contains the data to be added to the `data`
-	 * array. It is spread into a new object along with a generated `id` using the `v4()` function from an external library.
-	 * @returns The `create` method is returning the newly created item after adding it to the `data`
-	 * array and saving it to a file asynchronously.
-	 */
 	async create(item) {
 		const newItem = { id: v4(), ...item };
 		this.data.push(newItem);
@@ -50,13 +42,7 @@ class LocalJSONModel {
 		return newItem;
 	}
 
-	/**
-	 * The update function finds an item in the data array by id, updates it with new data, saves the
-	 * changes to a file, and returns the updated item.
-	 * @param id - The `id` parameter is the unique identifier of the item that needs to be updated in the data array.
-	 * @param newData - The `newData` parameter in the `update` method represents the updated information that you want to replace in the item with the specified `id`. It could include any new values or changes that you want to apply to the existing item in the data array.
-	 * @returns The `update` method is returning the updated item from the `data` array after updating it with the new data provided.
-	 */
+	
 	async update(id, newData) {
 		const index = this.data.findIndex((item) => item.id === id);
 		if (index === -1) {

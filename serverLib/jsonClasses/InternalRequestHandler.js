@@ -1,7 +1,7 @@
 const http = require('http');
 const { customLog, setDebugMode } = require('../../utils');
 
-setDebugMode(true);
+setDebugMode(false);
 // making a request and passing req,res to server.handleRequest
 class InternalRequestHandler {
 	constructor(server) {
@@ -22,7 +22,7 @@ class InternalRequestHandler {
 			    'Content-Type': 'application/json',
 			},
 		};
-		customLog('Should log here!'); // WTF- this does not log
+
 		customLog(
 			`Internal makeRequest (27) options(?) ${JSON.stringify(options) || 'no options here'}`
 		);
@@ -54,11 +54,7 @@ let responseData = '';
 
 			// Pass the response data to the server's handleRequest method
 			await this.server.handleRequest(
-				{
-					url: path,
-					method: method,
-					data: data,
-				},
+				options,
 				responseData
 			);
 			customLog(
